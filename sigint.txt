@@ -1,0 +1,31 @@
+Signal Capture Node:
+  - Monitors a specific Frequency 
+  - Captures and logs signal data for analysis
+  - Sends captured data to central database
+  - Has conection with other signal nodes and can share data between them as well as know if its offline
+
+Message Buffer Node:
+  - Stores and makes logs of caputred data:
+    - Timestamp
+    - Frequency
+  - Responsible for data integrity and backup
+    - Removes Duplicates
+    - Keeps a message buffer that will be transfered to the Decryption Nodes
+Decryption Node:
+  - Receives captured signal data 
+  - Has to transform the data into a meaningull and cohereent information.
+  - Uses various decryption algorithms to decode the captured signals
+    -Each node could try a diferent cypher configurations
+    -Each node could try diferent keys
+  - Sends decrypted information to the Analysis Node for further processing
+
+Command Center (Coordinator)
+  - Central Node 
+  - Assign decoding tasks
+  - Track worker(decoder) progress
+  - Collects Successfull Decreyption
+
+Signal Inteligence (SIGINT)
+
+
+CIFRA: pode ser qualquer forma de decriptografar uma mensagens, hence código morse ou cseasar cipher
