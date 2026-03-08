@@ -29,3 +29,5 @@ Signal Inteligence (SIGINT)
 
 
 CIFRA: pode ser qualquer forma de decriptografar uma mensagens, hence código morse ou cseasar cipher
+
+
