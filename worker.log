@@ -1,0 +1,217 @@
+=======================================================
+      WORKER RABBIT — INICIANDO CONSUMIDOR         
+=======================================================
+[Worker] Conectando ao RabbitMQ em localhost:5672...
+[Worker] ✅ Conectado! Aguardando mensagens na fila 'fila_processamento'...
+[Worker] Pressione CTRL+C para encerrar.
+
+
+[Worker] ▶ Pacote 1/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'WAGNERVOCEMEPERGUNTO'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 2/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'URECENTEMENTEPORQUEEUAFIRM'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 3/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'OTERMEDODEVOCECOMOD'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 4/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'ECOSTUMENAOSOUBERESPONDE'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 5/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'REMPARTEJUSTAMENTEPORCAUS'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 6/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'ADOMEDOQUETENHODEVOCEE'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 7/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'MPARTEPORQUENAMOTIVACA'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 8/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'ODESSEMEDOINTERVEMTANTO'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 9/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'SPORMENORESQUEMALPODERI'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 10/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'AREUNILOSNUMAFALAESEAQU'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 11/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'ITENTORESPONDERPORESCRIT'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 12/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'OSERASEMDUVIDADEUMMOD'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 13/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'OMUITOINCOMPLETOPORQU'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 14/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'ETAMBEMAOESCREVEROMEDO'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 15/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'ESUASCONSEQUENCIASMEINIBE'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 16/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'MDIANTEDEVOCEEPORQUE'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 17/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'AMAGNITUDEDOASSUNT'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 18/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'OULTRAPASSADELONGEMINH'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 19/19 | msg=278adaee...
+[Worker] ✅ Decodificado: 'AMEMORIAEMEUENTENDIMENTO'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 1/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'SEUVOCEMEPERGUNTO'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 2/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'URECENTEMENTEPORQUEEUAFIRM'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 3/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'OTERMEDODEVOCECOMOD'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 4/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'ECOSTUMENAOSOUBERESPONDE'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 5/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'REMPARTEJUSTAMENTEPORCAUS'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 6/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'ADOMEDOQUETENHODEVOCEE'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 7/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'MPARTEPORQUENAMOTIVACA'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 8/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'ODESSEMEDOINTERVEMTANTO'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 9/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'SPORMENORESQUEMALPODERI'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 10/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'AREUNILOSNUMAFALAESEAQU'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 11/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'ITENTORESPONDERPORESCRIT'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 12/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'OSERASEMDUVIDADEUMMOD'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 13/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'OMUITOINCOMPLETOPORQU'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 14/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'ETAMBEMAOESCREVEROMEDO'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 15/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'ESUASCONSEQUENCIASMEINIBE'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 16/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'MDIANTEDEVOCEEPORQUE'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 17/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'AMAGNITUDEDOASSUNT'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 18/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'OULTRAPASSADELONGEMINH'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 19/19 | msg=5f52d336...
+[Worker] ✅ Decodificado: 'AMEMORIAEMEUENTENDIMENTO'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 1/1 | msg=bc1df9a7...
+[Worker] ✅ Decodificado: 'AFOBADO'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 1/1 | msg=83d03407...
+[Worker] ✅ Decodificado: 'MEUNAMORADOEMAIOROTARIO'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 1/35 | msg=457c91c5...
+[Worker] ✅ Decodificado: 'MEUNAMORADOEMAIOROTARIOM'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 2/35 | msg=457c91c5...
+[Worker] ✅ Decodificado: 'CCAROLMEUNAMORADOEM'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 3/35 | msg=457c91c5...
+[Worker] ✅ Decodificado: 'OOTARIOELELAVAMINHA'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 4/35 | msg=457c91c5...
+[Worker] ✅ Decodificado: 'SCALCINHASEELEFICACHEIOD'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 5/35 | msg=457c91c5...
+[Worker] ✅ Decodificado: 'EMARRAEUMANDOELEPR'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 6/35 | msg=457c91c5...
+[Worker] ✅ Decodificado: 'ACOZINHASETUNAOT'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 7/35 | msg=457c91c5...
+[Worker] ✅ Decodificado: 'AGOSTANDOENTAODORMEN'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 8/35 | msg=457c91c5...
+[Worker] ✅ Decodificado: 'OPORTAOPORQUEEUVOUPR'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 9/35 | msg=457c91c5...
+[Worker] ✅ Decodificado: 'OBAILEVOUPRAMINH'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 10/35 | msg=457c91c5...
+[Worker] ✅ Decodificado: 'ACURTICAOACAACAACAACAACAB'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 11/35 | msg=457c91c5...
+[Worker] ✅ Decodificado: 'AESSAVAIVAIVAIACAACAACAACAACAB'
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 12/35 | msg=457c91c5...
+[Worker] ✅ Decodificado: ''
+[Worker] 📤 Resultado enviado ao Buffer com sucesso.
+
+[Worker] ▶ Pacote 13/35 | msg=457c91c5...
