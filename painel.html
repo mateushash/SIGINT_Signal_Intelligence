@@ -3,409 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criasdecrip - Dashboard Profissional</title>
+    <title>Criasdecrip - Dashboard v2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* ─── Variáveis de Cores ───────────────────────────────────────── */
         :root {
-            --laranja-forte: #FC5732;
-            --laranja-claro: #fff0ed;
-            --fundo-pagina: #f5f5f5;
-            --fundo-card: #ffffff;
-            --fundo-box: #fafafa;
-            --borda: #e0e0e0;
-            --texto-principal: #333333;
-            --texto-secundario: #777777;
-            --verde: #27ae60;
-            --amarelo: #f39c12;
-            --azul: #2980b9;
+            --bg: #0b0e14; --card: #141820; --card2: #1a1f2a;
+            --border: #252b38; --text: #e2e8f0; --muted: #64748b;
+            --accent: #f97316; --accent2: #fb923c; --green: #22c55e;
+            --red: #ef4444; --blue: #3b82f6; --purple: #a855f7;
+            --radius: 12px;
         }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
-        body.dark-mode {
-            --laranja-forte: #d94524;
-            --laranja-claro: #21100c;
-            --fundo-pagina: #0d0d0d;
-            --fundo-card: #1a1a1a;
-            --fundo-box: #141414;
-            --borda: #2e2e2e;
-            --texto-principal: #e0e0e0;
-            --texto-secundario: #888888;
-            --verde: #2ecc71;
-            --amarelo: #f1c40f;
-            --azul: #3498db;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--fundo-pagina);
-            color: var(--texto-principal);
-            margin: 0;
-            padding: 0;
-            transition: all 0.3s ease;
-        }
-
-        /* ─── Hero ─────────────────────────────────────────────────────── */
+        /* HERO */
         .hero {
-            background-color: var(--laranja-forte);
-            color: #ffffff;
-            text-align: center;
-            padding: 50px 20px 120px 20px;
-            position: relative;
-            transition: background-color 0.3s;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%);
+            padding: 48px 24px 100px; text-align:center; position:relative;
         }
-
-        .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
+        .hero h1 { font-size:2.4rem; font-weight:800; color:#fff; letter-spacing:2px; }
+        .hero p { color:rgba(255,255,255,.8); margin-top:6px; font-size:.95rem; }
+        .hero-badge {
+            display:inline-flex; align-items:center; gap:6px;
+            background:rgba(0,0,0,.25); padding:6px 14px; border-radius:20px;
+            font-size:.75rem; color:#fff; margin-top:14px;
         }
-        .theme-toggle:hover { background: rgba(255,255,255,0.3); }
-        .hero h1 { margin: 0; font-size: 2.5rem; font-weight: bold; letter-spacing: 1px; }
+        .dot { width:8px;height:8px;border-radius:50%;display:inline-block; }
+        .dot-green { background:var(--green); box-shadow:0 0 8px var(--green); }
+        .dot-red { background:var(--red); box-shadow:0 0 8px var(--red); }
 
-        /* ─── Card principal ────────────────────────────────────────────── */
-        .main-card {
-            position: relative;
-            z-index: 10;
-            max-width: 1200px;
-            margin: -70px auto 50px auto;
-            background: var(--fundo-card);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            padding: 30px;
+        /* MAIN CARD */
+        .main { max-width:1280px; margin:-60px auto 40px; padding:0 16px; position:relative; z-index:2; }
+        .card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:28px; }
+
+        /* STATS ROW */
+        .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:24px; }
+        .stat-box {
+            background:var(--card2); border:1px solid var(--border); border-radius:10px;
+            padding:18px; text-align:center; transition:transform .2s;
         }
+        .stat-box:hover { transform:translateY(-3px); }
+        .stat-val { font-size:1.8rem; font-weight:800; }
+        .stat-label { font-size:.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-top:4px; }
 
-        /* ─── Abas ──────────────────────────────────────────────────────── */
-        .tabs {
-            display: flex;
-            gap: 8px;
-            border-bottom: 2px solid var(--borda);
-            margin-bottom: 24px;
-        }
-
+        /* TABS */
+        .tabs { display:flex; gap:4px; border-bottom:2px solid var(--border); margin-bottom:22px; overflow-x:auto; }
         .tab-btn {
-            background: transparent;
-            border: none;
-            border-bottom: 3px solid transparent;
-            color: var(--texto-secundario);
-            padding: 10px 18px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: -2px;
-            transition: 0.2s;
+            background:transparent; border:none; border-bottom:3px solid transparent;
+            color:var(--muted); padding:10px 18px; cursor:pointer; font-size:.88rem;
+            font-weight:600; white-space:nowrap; transition:.2s;
         }
-        .tab-btn:hover { color: var(--laranja-forte); }
-        .tab-btn.active {
-            color: var(--laranja-forte);
-            border-bottom-color: var(--laranja-forte);
-        }
+        .tab-btn:hover { color:var(--accent); }
+        .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+        .tab-panel { display:none; } .tab-panel.active { display:block; }
 
-        .tab-panel { display: none; }
-        .tab-panel.active { display: block; }
-
-        /* ─── Toolbar ───────────────────────────────────────────────────── */
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--borda);
-            gap: 10px;
-        }
-
+        /* TOOLBAR */
+        .toolbar { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
+        .toolbar-info { font-size:.85rem; color:var(--muted); }
         .input-busca {
-            padding: 8px 15px;
-            border: 1px solid var(--borda);
-            border-radius: 6px;
-            background-color: var(--fundo-box);
-            color: var(--texto-principal);
-            width: 250px;
+            padding:8px 14px; border:1px solid var(--border); border-radius:8px;
+            background:var(--card2); color:var(--text); font-size:.85rem; width:220px;
         }
-
-        .btn-acao {
-            background: transparent;
-            border: 1px solid var(--laranja-forte);
-            color: var(--laranja-forte);
-            padding: 8px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
+        .btn {
+            padding:8px 16px; border-radius:8px; cursor:pointer; font-weight:600;
+            font-size:.82rem; transition:.2s; border:1px solid var(--border); background:var(--card2); color:var(--text);
         }
-        .btn-acao:hover { background: var(--laranja-forte); color: white; }
-        .btn-acao.ativo { background: #e74c3c; border-color: #e74c3c; color: white; }
+        .btn:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+        .btn-accent { background:var(--accent); color:#fff; border-color:var(--accent); }
+        .btn-accent:hover { background:var(--accent2); }
+        .btn-danger { border-color:var(--red); color:var(--red); }
+        .btn-danger:hover { background:var(--red); color:#fff; }
+        .btn-group { display:flex; gap:8px; flex-wrap:wrap; }
 
-        /* ─── Painel Dividido ───────────────────────────────────────────── */
-        .split-view {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-            gap: 25px;
-            min-height: 500px;
-        }
-
-        .panel {
-            min-width: 0;
-        }
-
+        /* SPLIT VIEW */
+        .split { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+        @media(max-width:768px) { .split { grid-template-columns:1fr; } }
+        .panel-title { font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:10px; }
         .data-box {
-            flex-grow: 1;
-            border: 1px solid var(--borda);
-            background-color: var(--fundo-box);
-            border-radius: 6px;
-            padding: 15px;
-            overflow-y: auto;
-            max-height: 500px;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 0.9rem;
+            background:var(--card2); border:1px solid var(--border); border-radius:10px;
+            padding:14px; max-height:420px; overflow-y:auto; font-family:'Courier New',monospace; font-size:.82rem;
         }
-
-        .log-entry {
-            border-bottom: 1px solid var(--borda);
-            padding: 8px 0;
-            color: var(--texto-secundario);
-        }
-
-        .status-tag { font-weight: bold; color: var(--laranja-forte); }
+        .log-entry { border-bottom:1px solid var(--border); padding:7px 0; color:var(--muted); }
+        .status-tag { font-weight:700; color:var(--accent); }
 
         .msg-final {
-            background-color: var(--laranja-claro);
-            border-left: 5px solid var(--laranja-forte);
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 6px;
-            position: relative;
-            line-height: 1.5;
+            background:linear-gradient(135deg, rgba(249,115,22,.08), rgba(249,115,22,.03));
+            border-left:4px solid var(--accent); padding:16px 18px; margin-bottom:12px;
+            border-radius:8px; position:relative;
         }
+        .msg-final small { color:var(--muted); font-size:.7rem; }
+        .msg-final strong { display:block; margin-top:8px; font-size:1rem; word-break:break-all; }
+        .btn-copy { position:absolute; top:12px; right:12px; font-size:.7rem; padding:5px 10px; }
 
-        .msg-final strong {
-            display: block;
-            margin-top: 10px;
-            font-size: 1.1rem;
-            color: var(--texto-principal);
-            white-space: nowrap;
-            overflow-x: auto;
-            padding-bottom: 10px;
-        }
+        .vazio { text-align:center; padding:40px; color:var(--muted); font-style:italic; }
 
-        /* Scrollbar mais bonita para o horizontal */
-        .msg-final strong::-webkit-scrollbar {
-            height: 6px;
-        }
-        .msg-final strong::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.1);
-        }
-        .msg-final strong::-webkit-scrollbar-thumb {
-            background: var(--laranja-forte);
-            border-radius: 10px;
-        }
-
-        .btn-copy {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 0.75rem;
-            padding: 6px 12px;
-        }
-
-        .vazio { text-align: center; margin-top: 40px; color: var(--texto-secundario); font-style: italic; }
-
-        /* ─── Scores (Semana 3 e 4) ─────────────────────────────────────── */
-        .scores-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 20px;
-        }
-
+        /* SCORES GRID */
+        .scores-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
         .score-card {
-            border: 1px solid var(--borda);
-            border-radius: 10px;
-            padding: 20px;
-            background: var(--fundo-box);
-            transition: box-shadow 0.2s;
+            background:var(--card2); border:1px solid var(--border); border-radius:10px;
+            padding:20px; transition:transform .2s, box-shadow .2s;
         }
-        .score-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-
-        .score-card .msg-id {
-            font-size: 0.75rem;
-            color: var(--texto-secundario);
-            font-family: monospace;
-            margin-bottom: 14px;
-            border-bottom: 1px solid var(--borda);
-            padding-bottom: 8px;
-        }
-
-        .score-metrics {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
+        .score-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.3); }
+        .score-card .msg-id { font-size:.72rem; color:var(--muted); font-family:monospace; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+        .score-metrics { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
         .metric {
-            background: var(--fundo-card);
-            border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-            border: 1px solid var(--borda);
+            background:var(--card); border:1px solid var(--border); border-radius:8px;
+            padding:12px; text-align:center;
         }
-        .metric-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-        .metric-label {
-            font-size: 0.72rem;
-            color: var(--texto-secundario);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .metric-value { font-size:1.4rem; font-weight:800; }
+        .metric-label { font-size:.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-top:2px; }
+        .bar-container { margin-top:12px; }
+        .bar-label { display:flex; justify-content:space-between; font-size:.75rem; margin-bottom:3px; }
+        .bar-track { background:var(--border); border-radius:99px; height:6px; overflow:hidden; }
+        .bar-fill { height:100%; border-radius:99px; transition:width .6s ease; }
+        .score-ts { font-size:.7rem; color:var(--muted); margin-top:10px; text-align:right; }
 
-        .bar-container {
-            margin-top: 14px;
-        }
-        .bar-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            margin-bottom: 4px;
-        }
-        .bar-track {
-            background: var(--borda);
-            border-radius: 99px;
-            height: 8px;
-            overflow: hidden;
-        }
-        .bar-fill {
-            height: 100%;
-            border-radius: 99px;
-            transition: width 0.6s ease;
-        }
+        /* ENDPOINTS TABLE */
+        .endpoint-table { width:100%; border-collapse:collapse; font-size:.85rem; }
+        .endpoint-table th { text-align:left; padding:10px 14px; background:var(--card2); color:var(--muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.5px; }
+        .endpoint-table td { padding:10px 14px; border-bottom:1px solid var(--border); }
+        .endpoint-table tr:hover td { background:rgba(249,115,22,.05); }
+        .method-tag { padding:3px 8px; border-radius:4px; font-size:.7rem; font-weight:700; }
+        .method-get { background:rgba(34,197,94,.15); color:var(--green); }
+        .method-post { background:rgba(249,115,22,.15); color:var(--accent); }
+        code { background:var(--card2); padding:2px 8px; border-radius:4px; font-size:.82rem; color:var(--accent2); }
 
-        .score-ts {
-            font-size: 0.72rem;
-            color: var(--texto-secundario);
-            margin-top: 12px;
-            text-align: right;
+        /* MESSAGES LIST */
+        .msg-list-item {
+            background:var(--card2); border:1px solid var(--border); border-radius:10px;
+            padding:16px; margin-bottom:10px; cursor:pointer; transition:.2s;
         }
+        .msg-list-item:hover { border-color:var(--accent); transform:translateX(4px); }
+        .msg-list-item .msg-head { display:flex; justify-content:space-between; align-items:center; }
+        .msg-list-item .msg-text { margin-top:8px; color:var(--muted); font-size:.85rem; word-break:break-all; }
 
-        /* Status colorido */
-        .tag-verde { color: var(--verde); }
-        .tag-amarelo { color: var(--amarelo); }
-        .tag-vermelho { color: var(--laranja-forte); }
-        .tag-azul { color: var(--azul); }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width:6px; height:6px; }
+        ::-webkit-scrollbar-track { background:var(--card2); }
+        ::-webkit-scrollbar-thumb { background:var(--accent); border-radius:10px; }
     </style>
 </head>
-<body class="dark-mode">
+<body>
     <div class="hero">
-        <button class="theme-toggle" onclick="toggleTheme()" id="btn-tema">☀️ Claro</button>
         <h1>CRIASDECRIP</h1>
         <p>Sistema Central de Monitorização de Sinais</p>
+        <div class="hero-badge" id="health-badge"><span class="dot dot-red"></span> Conectando...</div>
     </div>
 
-    <div class="main-card">
-
-        <!-- Abas de navegação -->
-        <div class="tabs">
-            <button class="tab-btn active" onclick="mudarAba('monitor')" id="tab-monitor">📡 Monitor</button>
-            <button class="tab-btn" onclick="mudarAba('scores')" id="tab-scores">📊 Scores / Modelo</button>
+    <div class="main">
+        <!-- STATS -->
+        <div class="stats" id="stats-row">
+            <div class="stat-box"><div class="stat-val" id="s-msgs">—</div><div class="stat-label">Mensagens</div></div>
+            <div class="stat-box"><div class="stat-val" id="s-pkts">—</div><div class="stat-label">Pacotes</div></div>
+            <div class="stat-box"><div class="stat-val" id="s-proc">—</div><div class="stat-label">Processados</div></div>
+            <div class="stat-box"><div class="stat-val" id="s-pend">—</div><div class="stat-label">Pendentes</div></div>
+            <div class="stat-box"><div class="stat-val" id="s-integ">—</div><div class="stat-label">Média Integridade</div></div>
+            <div class="stat-box"><div class="stat-val" id="s-lat">—</div><div class="stat-label">Média Latência</div></div>
         </div>
 
-        <!-- ─── ABA 1: Monitor ──────────────────────────────────────── -->
-        <div class="tab-panel active" id="panel-monitor">
-            <div class="toolbar">
-                <input type="text" id="busca" class="input-busca" placeholder="Pesquisar mensagem..." onkeyup="renderizar()">
-                <div>
-                    <button class="btn-acao" id="btn-pause" onclick="togglePause()">⏸️ Pausar</button>
-                    <button class="btn-acao" onclick="exportar()">📥 Exportar .txt</button>
+        <div class="card">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="mudarAba('monitor')" id="tab-monitor">📡 Monitor</button>
+                <button class="tab-btn" onclick="mudarAba('scores')" id="tab-scores">📊 Scores</button>
+                <button class="tab-btn" onclick="mudarAba('mensagens')" id="tab-mensagens">💬 Mensagens</button>
+                <button class="tab-btn" onclick="mudarAba('api')" id="tab-api">🔌 API Docs</button>
+            </div>
+
+            <!-- ABA MONITOR -->
+            <div class="tab-panel active" id="panel-monitor">
+                <div class="toolbar">
+                    <input type="text" class="input-busca" id="busca" placeholder="Pesquisar..." onkeyup="renderizar()">
+                    <div class="btn-group">
+                        <button class="btn" id="btn-pause" onclick="togglePause()">⏸ Pausar</button>
+                        <button class="btn" onclick="exportarTxt()">📥 Exportar .txt</button>
+                    </div>
+                </div>
+                <div class="split">
+                    <div><div class="panel-title">Logs de Entrada</div><div class="data-box" id="logs"></div></div>
+                    <div><div class="panel-title">Resultado Decodificado</div><div class="data-box" id="resultados" style="background:var(--card);"></div></div>
                 </div>
             </div>
 
-            <div class="split-view">
-                <div class="panel">
-                    <p><strong>LOGS DE ENTRADA</strong></p>
-                    <div class="data-box" id="logs"></div>
+            <!-- ABA SCORES -->
+            <div class="tab-panel" id="panel-scores">
+                <div class="toolbar">
+                    <span class="toolbar-info">Métricas calculadas pelo <strong>Score Service</strong> após cada transmissão completa.</span>
+                    <button class="btn btn-accent" onclick="fetchScores()">🔄 Atualizar</button>
                 </div>
-                <div class="panel">
-                    <p><strong>RESULTADO DECODIFICADO</strong></p>
-                    <div class="data-box" id="resultados" style="background-color: var(--fundo-card);"></div>
-                </div>
+                <div class="scores-grid" id="scores-grid"><div class="vazio">Aguardando scores...</div></div>
             </div>
-        </div>
 
-        <!-- ─── ABA 2: Scores / Modelo ─────────────────────────────── -->
-        <div class="tab-panel" id="panel-scores">
-            <div class="toolbar">
-                <span style="color: var(--texto-secundario); font-size:0.9rem;">
-                    Métricas de qualidade calculadas pelo <strong>Score Service</strong> após cada transmissão completa.
-                </span>
-                <button class="btn-acao" onclick="fetchScores()">🔄 Atualizar</button>
+            <!-- ABA MENSAGENS -->
+            <div class="tab-panel" id="panel-mensagens">
+                <div class="toolbar">
+                    <span class="toolbar-info">Todas as mensagens decodificadas pelo sistema.</span>
+                    <div class="btn-group">
+                        <button class="btn btn-accent" onclick="fetchMensagens()">🔄 Atualizar</button>
+                        <button class="btn" onclick="exportarJson()">📦 Exportar JSON</button>
+                        <button class="btn btn-danger" onclick="limparBanco()">🗑 Limpar Banco</button>
+                    </div>
+                </div>
+                <div id="mensagens-list"><div class="vazio">Carregando...</div></div>
             </div>
-            <div class="scores-grid" id="scores-grid">
-                <div class="vazio">Aguardando scores... (rode o score_service.py)</div>
+
+            <!-- ABA API DOCS -->
+            <div class="tab-panel" id="panel-api">
+                <div class="toolbar"><span class="toolbar-info">Documentação dos endpoints REST disponíveis (Semana 5 e 6).</span></div>
+                <table class="endpoint-table">
+                    <thead><tr><th>Método</th><th>Endpoint</th><th>Descrição</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="method-tag method-post">POST</span></td><td><code>/receber</code></td><td>Envia mensagem binária para o buffer</td></tr>
+                        <tr><td><span class="method-tag method-post">POST</span></td><td><code>/retorno</code></td><td>Worker devolve resultado decodificado</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/health</code></td><td>Health check + uptime + status do RabbitMQ</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/status</code></td><td>Últimos 50 pacotes (monitor em tempo real)</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/stats</code></td><td>Estatísticas agregadas do sistema</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/scores</code></td><td>Últimos 20 scores calculados</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/mensagens</code></td><td>Lista mensagens decodificadas (read-only)</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/mensagem/&lt;id&gt;</code></td><td>Detalhe completo de uma mensagem específica</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/central</code></td><td>Central lê mensagens (altera status)</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/exportar</code></td><td>Exporta tudo em JSON (mensagens + scores)</td></tr>
+                        <tr><td><span class="method-tag method-post">POST</span></td><td><code>/api/limpar</code></td><td>Limpa o banco de dados inteiro</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
     <script>
-        let dadosGlobais = [];
-        let pausado = false;
+        const API = 'http://localhost:5050';
+        let dadosGlobais = [], pausado = false;
 
-        /* ── Abas ───────────────────────────────────────────────────── */
+        /* ── Abas ─────────────────────────────── */
         function mudarAba(aba) {
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('panel-' + aba).classList.add('active');
             document.getElementById('tab-' + aba).classList.add('active');
             if (aba === 'scores') fetchScores();
+            if (aba === 'mensagens') fetchMensagens();
         }
 
-        /* ── Tema ───────────────────────────────────────────────────── */
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            document.getElementById('btn-tema').innerText = isDark ? '☀️ Claro' : '🌙 Escuro';
+        /* ── Health ────────────────────────────── */
+        async function fetchHealth() {
+            const badge = document.getElementById('health-badge');
+            try {
+                const r = await fetch(API + '/api/health');
+                const j = await r.json();
+                const up = j.uptime_seconds;
+                const m = Math.floor(up/60), s = Math.floor(up%60);
+                const rabbit = j.rabbitmq === 'online';
+                badge.innerHTML = `<span class="dot ${rabbit?'dot-green':'dot-red'}"></span> Buffer Online · RabbitMQ ${rabbit?'✅':'❌'} · Uptime ${m}m${s}s`;
+            } catch(e) {
+                badge.innerHTML = '<span class="dot dot-red"></span> Buffer Offline';
+            }
         }
 
-        /* ── Pause ──────────────────────────────────────────────────── */
+        /* ── Stats ─────────────────────────────── */
+        async function fetchStats() {
+            try {
+                const r = await fetch(API + '/api/stats');
+                const j = await r.json();
+                document.getElementById('s-msgs').textContent = j.total_mensagens ?? 0;
+                document.getElementById('s-pkts').textContent = j.total_pacotes ?? 0;
+                document.getElementById('s-proc').textContent = j.pacotes_processados ?? 0;
+                document.getElementById('s-pend').textContent = j.pacotes_pendentes ?? 0;
+                document.getElementById('s-integ').textContent = (j.media_integridade ?? 0) + '%';
+                document.getElementById('s-lat').textContent = (j.media_latencia_ms ?? 0) + 'ms';
+            } catch(e) {}
+        }
+
+        /* ── Pause ─────────────────────────────── */
         function togglePause() {
             pausado = !pausado;
-            document.getElementById('btn-pause').innerText = pausado ? '▶️ Retomar' : '⏸️ Pausar';
-            document.getElementById('btn-pause').classList.toggle('ativo');
+            const b = document.getElementById('btn-pause');
+            b.textContent = pausado ? '▶ Retomar' : '⏸ Pausar';
+            if(pausado) b.classList.add('btn-accent'); else b.classList.remove('btn-accent');
         }
 
-        /* ── Monitor ────────────────────────────────────────────────── */
+        /* ── Monitor ───────────────────────────── */
         async function fetchDados() {
             if (pausado) return;
             try {
-                const res = await fetch('http://localhost:5050/api/status');
-                const json = await res.json();
-                dadosGlobais = json.pacotes || [];
+                const r = await fetch(API + '/api/status');
+                const j = await r.json();
+                dadosGlobais = j.pacotes || [];
                 renderizar();
-            } catch (e) {
-                document.getElementById('logs').innerHTML =
-                    '<div class="vazio" style="color:var(--laranja-forte);">🔴 Erro de ligação! O buffer.py está a rodar?</div>';
+            } catch(e) {
+                document.getElementById('logs').innerHTML = '<div class="vazio" style="color:var(--red)">🔴 Buffer offline!</div>';
             }
         }
 
         function renderizar() {
-            const busca  = document.getElementById('busca').value.toLowerCase();
+            const busca = document.getElementById('busca').value.toLowerCase();
             const logBox = document.getElementById('logs');
             const resBox = document.getElementById('resultados');
 
-            // Salvar posições de scroll atuais
-            const scrolls = {};
-            resBox.querySelectorAll('strong').forEach(el => {
-                const id = el.getAttribute('data-msg-id');
-                if (id) scrolls[id] = el.scrollLeft;
-            });
-
-            // Logs de entrada
             logBox.innerHTML = dadosGlobais.map(p => `
                 <div class="log-entry">
                     <span class="status-tag">[${p.status.toUpperCase()}]</span> Pct ${p.ordem+1}/${p.total}<br>
@@ -413,125 +305,113 @@
                 </div>
             `).join('') || '<div class="vazio">Sem dados...</div>';
 
-            // Mensagens completas
             const grupos = {};
             dadosGlobais.forEach(p => {
                 if (!grupos[p.message_id]) grupos[p.message_id] = [];
                 grupos[p.message_id].push(p);
             });
 
-            let htmlRes = '';
+            let html = '';
             Object.keys(grupos).forEach(id => {
                 const pcts = grupos[id].sort((a,b) => a.ordem - b.ordem);
                 if (pcts.length === pcts[0].total && pcts.every(p => p.status !== 'recebido')) {
                     const texto = pcts.map(p => p.texto).join('');
                     if (texto.toLowerCase().includes(busca)) {
-                        htmlRes += `
-                            <div class="msg-final">
-                                <button class="btn-acao btn-copy" onclick="navigator.clipboard.writeText('${texto}')">Copiar</button>
-                                <small style="display:block;opacity:0.6">ID: ${id}</small>
-                                <strong data-msg-id="${id}">${texto}</strong>
-                            </div>`;
+                        html += `<div class="msg-final">
+                            <button class="btn btn-copy" onclick="navigator.clipboard.writeText('${texto.replace(/'/g,"\\'")}')">📋 Copiar</button>
+                            <small>ID: ${id}</small>
+                            <strong>${texto}</strong>
+                        </div>`;
                     }
                 }
             });
-            resBox.innerHTML = htmlRes || '<div class="vazio">Nenhuma mensagem completa.</div>';
-
-            // Restaurar posições de scroll
-            resBox.querySelectorAll('strong').forEach(el => {
-                const id = el.getAttribute('data-msg-id');
-                if (id && scrolls[id]) el.scrollLeft = scrolls[id];
-            });
+            resBox.innerHTML = html || '<div class="vazio">Nenhuma mensagem completa.</div>';
         }
 
-        function exportar() {
-            const texto = document.getElementById('resultados').innerText;
-            const blob  = new Blob([texto], {type: 'text/plain'});
-            const url   = window.URL.createObjectURL(blob);
-            const a     = document.createElement('a');
-            a.href      = url;
-            a.download  = 'criasdecrip_logs.txt';
-            a.click();
+        function exportarTxt() {
+            const t = document.getElementById('resultados').innerText;
+            const b = new Blob([t], {type:'text/plain'});
+            const a = document.createElement('a'); a.href = URL.createObjectURL(b);
+            a.download = 'criasdecrip_logs.txt'; a.click();
         }
 
-        /* ─── Scores / Modelo ────────────────────────────────────────── */
+        /* ── Scores ────────────────────────────── */
         async function fetchScores() {
             const grid = document.getElementById('scores-grid');
             try {
-                const res  = await fetch('http://localhost:5050/api/scores');
-                const json = await res.json();
-                const scores = json.scores || [];
-
-                if (!scores.length) {
-                    grid.innerHTML = '<div class="vazio">Nenhum score disponível ainda. Envie uma mensagem e aguarde o processamento completo.</div>';
-                    return;
-                }
-
+                const r = await fetch(API + '/api/scores');
+                const j = await r.json();
+                const scores = j.scores || [];
+                if (!scores.length) { grid.innerHTML = '<div class="vazio">Nenhum score disponível.</div>'; return; }
                 grid.innerHTML = scores.map(s => {
-                    const integ  = s.score_integridade  ?? 0;
-                    const reconst = s.score_reconstrucao ?? 0;
-                    const lat    = s.latencia_media_ms  ?? 0;
-                    const ok     = s.pacotes_ok         ?? 0;
-                    const total  = s.total_pacotes       ?? 0;
-
-                    const corInteg  = integ  >= 90 ? 'var(--verde)' : integ  >= 60 ? 'var(--amarelo)' : 'var(--laranja-forte)';
-                    const corRecon  = reconst >= 90 ? 'var(--verde)' : reconst >= 60 ? 'var(--amarelo)' : 'var(--laranja-forte)';
-
-                    return `
-                    <div class="score-card">
-                        <div class="msg-id">📨 MSG: ${s.message_id}</div>
-
+                    const integ = s.score_integridade ?? 0, reconst = s.score_reconstrucao ?? 0;
+                    const lat = s.latencia_media_ms ?? 0, ok = s.pacotes_ok ?? 0, total = s.total_pacotes ?? 0;
+                    const cI = integ >= 90 ? 'var(--green)' : integ >= 60 ? 'var(--accent)' : 'var(--red)';
+                    const cR = reconst >= 90 ? 'var(--green)' : reconst >= 60 ? 'var(--accent)' : 'var(--red)';
+                    return `<div class="score-card">
+                        <div class="msg-id">📨 ${s.message_id}</div>
                         <div class="score-metrics">
-                            <div class="metric">
-                                <div class="metric-value" style="color:${corInteg}">${integ}%</div>
-                                <div class="metric-label">Integridade</div>
-                            </div>
-                            <div class="metric">
-                                <div class="metric-value" style="color:${corRecon}">${reconst}%</div>
-                                <div class="metric-label">Reconstrução</div>
-                            </div>
-                            <div class="metric">
-                                <div class="metric-value" style="color:var(--azul)">${lat} ms</div>
-                                <div class="metric-label">Latência Média</div>
-                            </div>
-                            <div class="metric">
-                                <div class="metric-value">${ok}/${total}</div>
-                                <div class="metric-label">Pacotes OK</div>
-                            </div>
+                            <div class="metric"><div class="metric-value" style="color:${cI}">${integ}%</div><div class="metric-label">Integridade</div></div>
+                            <div class="metric"><div class="metric-value" style="color:${cR}">${reconst}%</div><div class="metric-label">Reconstrução</div></div>
+                            <div class="metric"><div class="metric-value" style="color:var(--blue)">${lat}ms</div><div class="metric-label">Latência</div></div>
+                            <div class="metric"><div class="metric-value">${ok}/${total}</div><div class="metric-label">Pacotes OK</div></div>
                         </div>
-
                         <div class="bar-container">
-                            <div class="bar-label">
-                                <span>Score de Integridade</span>
-                                <span style="color:${corInteg}">${integ}%</span>
-                            </div>
-                            <div class="bar-track">
-                                <div class="bar-fill" style="width:${integ}%; background:${corInteg}"></div>
-                            </div>
+                            <div class="bar-label"><span>Integridade</span><span style="color:${cI}">${integ}%</span></div>
+                            <div class="bar-track"><div class="bar-fill" style="width:${integ}%;background:${cI}"></div></div>
                         </div>
-
                         <div class="bar-container">
-                            <div class="bar-label">
-                                <span>Score de Reconstrução</span>
-                                <span style="color:${corRecon}">${reconst}%</span>
-                            </div>
-                            <div class="bar-track">
-                                <div class="bar-fill" style="width:${reconst}%; background:${corRecon}"></div>
-                            </div>
+                            <div class="bar-label"><span>Reconstrução</span><span style="color:${cR}">${reconst}%</span></div>
+                            <div class="bar-track"><div class="bar-fill" style="width:${reconst}%;background:${cR}"></div></div>
                         </div>
-
                         <div class="score-ts">🕐 ${s.ts_score || '—'}</div>
                     </div>`;
                 }).join('');
-
-            } catch (e) {
-                grid.innerHTML = '<div class="vazio" style="color:var(--laranja-forte);">🔴 Erro ao buscar scores. O buffer.py está rodando?</div>';
-            }
+            } catch(e) { grid.innerHTML = '<div class="vazio" style="color:var(--red)">🔴 Erro ao buscar scores.</div>'; }
         }
 
-        /* ── Polling ────────────────────────────────────────────────── */
-        setInterval(fetchDados, 1500);
-        fetchDados();
+        /* ── Mensagens ─────────────────────────── */
+        async function fetchMensagens() {
+            const el = document.getElementById('mensagens-list');
+            try {
+                const r = await fetch(API + '/api/mensagens');
+                const j = await r.json();
+                const msgs = j.mensagens || [];
+                if (!msgs.length) { el.innerHTML = '<div class="vazio">Nenhuma mensagem decodificada.</div>'; return; }
+                el.innerHTML = msgs.map(m => `
+                    <div class="msg-list-item" onclick="navigator.clipboard.writeText('${m.texto.replace(/'/g,"\\'")}')">
+                        <div class="msg-head">
+                            <span style="font-size:.75rem;color:var(--muted);font-family:monospace;">📨 ${m.message_id}</span>
+                            <span style="font-size:.72rem;color:var(--muted);">${m.total_pacotes} pacotes · ${m.ts_recebido || ''}</span>
+                        </div>
+                        <div class="msg-text">${m.texto}</div>
+                    </div>
+                `).join('');
+            } catch(e) { el.innerHTML = '<div class="vazio" style="color:var(--red)">🔴 Buffer offline.</div>'; }
+        }
+
+        async function exportarJson() {
+            try {
+                const r = await fetch(API + '/api/exportar');
+                const j = await r.json();
+                const b = new Blob([JSON.stringify(j, null, 2)], {type:'application/json'});
+                const a = document.createElement('a'); a.href = URL.createObjectURL(b);
+                a.download = 'criasdecrip_export.json'; a.click();
+            } catch(e) { alert('Erro: Buffer offline!'); }
+        }
+
+        async function limparBanco() {
+            if (!confirm('⚠️ Tem certeza? Isso vai apagar TODOS os dados!')) return;
+            try {
+                await fetch(API + '/api/limpar', {method:'POST'});
+                alert('✅ Banco limpo!');
+                fetchDados(); fetchStats(); fetchMensagens();
+            } catch(e) { alert('Erro!'); }
+        }
+
+        /* ── Polling ───────────────────────────── */
+        setInterval(() => { fetchDados(); fetchHealth(); fetchStats(); }, 2000);
+        fetchDados(); fetchHealth(); fetchStats();
     </script>
 </body>
 </html>

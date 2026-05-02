@@ -242,3 +242,87 @@ def buscar_scores() -> list:
         }
         for p in linhas
     ]
+
+
+# ─── FUNÇÕES SEMANA 5 e 6 ──────────────────────────────────────────────────────
+
+def buscar_estatisticas() -> dict:
+    """Retorna estatísticas agregadas do sistema."""
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM pacotes")
+    total_pacotes = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(DISTINCT message_id) FROM pacotes")
+    total_mensagens = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM pacotes WHERE status = 'processado' OR status = 'lido_central'")
+    pacotes_processados = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM pacotes WHERE status = 'recebido' OR status = 'enviado_worker'")
+    pacotes_pendentes = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM scores")
+    total_scores = cursor.fetchone()[0]
+
+    cursor.execute("SELECT AVG(score_integridade), AVG(score_reconstrucao), AVG(latencia_media_ms) FROM scores")
+    medias = cursor.fetchone()
+
+    conn.close()
+
+    return {
+        "total_pacotes": total_pacotes,
+        "total_mensagens": total_mensagens,
+        "pacotes_processados": pacotes_processados,
+        "pacotes_pendentes": pacotes_pendentes,
+        "total_scores": total_scores,
+        "media_integridade": round(medias[0] or 0, 2),
+        "media_reconstrucao": round(medias[1] or 0, 2),
+        "media_latencia_ms": round(medias[2] or 0, 2),
+    }
+
+
+def buscar_mensagens_decodificadas() -> list:
+    """Lista todas as mensagens completas sem alterar o status (read-only)."""
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT message_id, COUNT(*) as qtd, total, MIN(ts_recebido) as primeiro
+        FROM pacotes
+        WHERE status IN ('processado', 'lido_central')
+        GROUP BY message_id
+        HAVING qtd = total
+        ORDER BY primeiro DESC
+    """)
+    prontos = cursor.fetchall()
+
+    mensagens = []
+    for msg in prontos:
+        msg_id = msg[0]
+        cursor.execute("""
+            SELECT mensagem_decodificada FROM pacotes
+            WHERE message_id = ? ORDER BY ordem ASC
+        """, (msg_id,))
+        pacotes = cursor.fetchall()
+        texto = "".join([p[0] for p in pacotes if p[0]])
+        mensagens.append({
+            "message_id": msg_id,
+            "texto": texto,
+            "total_pacotes": msg[2],
+            "ts_recebido": msg[3],
+        })
+
+    conn.close()
+    return mensagens
+
+
+def limpar_banco():
+    """Remove todos os dados das tabelas pacotes e scores."""
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM pacotes")
+    cursor.execute("DELETE FROM scores")
+    conn.commit()
+    conn.close()

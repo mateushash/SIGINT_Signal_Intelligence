@@ -2,13 +2,17 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from zdb import (
     criar_tabela, inserir_registro, marcar_enviado, atualizar_resultado,
-    buscar_mensagens_para_central, buscar_status_geral, buscar_scores
+    buscar_mensagens_para_central, buscar_status_geral, buscar_scores,
+    buscar_pacotes_da_mensagem, buscar_estatisticas, buscar_mensagens_decodificadas,
+    limpar_banco
 )
 import uuid
 import pika
 import json
+import time
 
 RABBITMQ_HOST = "localhost"
+SERVER_START_TIME = time.time()
 
 app = Flask(__name__)
 CORS(app)
@@ -128,7 +132,85 @@ def api_scores():
     return jsonify({"status": "ok", "scores": scores})
 
 
+# ─── ENDPOINTS SEMANA 5 e 6 ────────────────────────────────────────────────────
+
+@app.route("/api/health", methods=["GET"])
+def api_health():
+    """Health check com uptime e status do RabbitMQ."""
+    uptime_s = round(time.time() - SERVER_START_TIME, 1)
+    rabbit_ok = False
+    try:
+        conn = pika.BlockingConnection(
+            pika.ConnectionParameters(host=RABBITMQ_HOST, connection_attempts=1, retry_delay=0, socket_timeout=2)
+        )
+        conn.close()
+        rabbit_ok = True
+    except Exception:
+        pass
+    return jsonify({
+        "status": "ok",
+        "uptime_seconds": uptime_s,
+        "rabbitmq": "online" if rabbit_ok else "offline",
+        "porta": 5050,
+    })
+
+
+@app.route("/api/stats", methods=["GET"])
+def api_stats():
+    """Retorna estatísticas agregadas do sistema."""
+    stats = buscar_estatisticas()
+    return jsonify({"status": "ok", **stats})
+
+
+@app.route("/api/mensagem/<message_id>", methods=["GET"])
+def api_mensagem_detalhe(message_id):
+    """Retorna todos os pacotes + score de uma mensagem específica."""
+    pacotes = buscar_pacotes_da_mensagem(message_id)
+    if not pacotes:
+        return jsonify({"status": "erro", "msg": "Mensagem não encontrada"}), 404
+    scores = buscar_scores()
+    score = next((s for s in scores if s["message_id"] == message_id), None)
+    texto = "".join([p.get("mensagem_decodificada") or "" for p in pacotes])
+    return jsonify({
+        "status": "ok",
+        "message_id": message_id,
+        "texto_completo": texto,
+        "total_pacotes": len(pacotes),
+        "pacotes": pacotes,
+        "score": score,
+    })
+
+
+@app.route("/api/mensagens", methods=["GET"])
+def api_mensagens():
+    """Lista todas as mensagens decodificadas (sem alterar status)."""
+    mensagens = buscar_mensagens_decodificadas()
+    return jsonify({"status": "ok", "mensagens": mensagens})
+
+
+@app.route("/api/exportar", methods=["GET"])
+def api_exportar():
+    """Exporta todos os dados (mensagens + scores) em JSON."""
+    mensagens = buscar_mensagens_decodificadas()
+    scores = buscar_scores()
+    stats = buscar_estatisticas()
+    return jsonify({
+        "status": "ok",
+        "exportado_em": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "estatisticas": stats,
+        "mensagens": mensagens,
+        "scores": scores,
+    })
+
+
+@app.route("/api/limpar", methods=["POST"])
+def api_limpar():
+    """Limpa todo o banco de dados (reset)."""
+    limpar_banco()
+    return jsonify({"status": "ok", "msg": "Banco de dados limpo com sucesso."})
+
+
 if __name__ == "__main__":
     criar_tabela()
-    print("[Buffer] ✅ Banco de dados pronto. Iniciando servidor na porta 5000...")
+    print("[Buffer] ✅ Banco de dados pronto. Iniciando servidor na porta 5050...")
     app.run(port=5050, debug=False)
