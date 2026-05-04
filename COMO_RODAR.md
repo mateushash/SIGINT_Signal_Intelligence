@@ -6,8 +6,6 @@ Este projeto foi construído cobrindo **todos os requisitos** pedidos:
 ✅ **Semana 3 e 4:** Processamento isolado (Worker real com RabbitMQ) + Serviço de Score/Modelo para métricas + Salvar resultados no SQLite (tabela `scores`).  
 ✅ **Semana 5 e 6:** API REST completa + Dashboard profissional + Endpoints mínimos (health, stats, export, etc).
 
-Para facilitar, criei scripts automáticos! Não precisa mais abrir 4 terminais diferentes.
-
 ---
 
 ## 🟢 1. Como INICIAR tudo (Ligar o sistema)
@@ -18,7 +16,9 @@ Para iniciar o RabbitMQ no Docker e todos os serviços Python de uma só vez, ab
 # Entre na pasta do projeto pelo terminal e rode:
 chmod +x start.sh stop.sh
 ./start.sh
-# depois o comando `python3 sending_test.py` para enviar mensagem de teste
+# depois o comando 
+`python3 sending_test.py`
+# para enviar mensagem de teste
 ```
 
 > [!IMPORTANT]
@@ -33,7 +33,7 @@ chmod +x start.sh stop.sh
 
 ## 🛑 2. Como PARAR tudo (Desligar o sistema)
 
-Para não ficar consumindo bateria ou memória RAM no fundo do seu Mac, você pode desligar tudo de uma vez. No terminal, rode:
+Você pode desligar tudo de uma vez. No terminal, rode:
 
 ```bash
 # Na pasta do projeto, rode:
@@ -42,7 +42,7 @@ Para não ficar consumindo bateria ou memória RAM no fundo do seu Mac, você po
 
 ---
 
-## 💻 3. Como rodar MANUALMENTE (Modo Hacker / 4 Terminais)
+## 💻 3. Como rodar MANUALMENTE (Modo 4 Terminais)
 
 Se você quiser ver os logs acontecendo em tempo real, não use o `./start.sh`. Siga os passos abaixo:
 
