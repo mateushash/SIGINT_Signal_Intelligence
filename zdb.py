@@ -328,3 +328,13 @@ def limpar_banco():
     cursor.execute("DELETE FROM scores")
     conn.commit()
     conn.close()
+
+
+def deletar_mensagem(message_id: str):
+    """Remove todos os pacotes e o score de uma mensagem específica."""
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM pacotes WHERE message_id = ?", (message_id,))
+    cursor.execute("DELETE FROM scores WHERE message_id = ?", (message_id,))
+    conn.commit()
+    conn.close()

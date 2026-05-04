@@ -4,7 +4,7 @@ from zdb import (
     criar_tabela, inserir_registro, marcar_enviado, atualizar_resultado,
     buscar_mensagens_para_central, buscar_status_geral, buscar_scores,
     buscar_pacotes_da_mensagem, buscar_estatisticas, buscar_mensagens_decodificadas,
-    limpar_banco
+    limpar_banco, deletar_mensagem
 )
 import uuid
 import pika
@@ -209,6 +209,13 @@ def api_limpar():
     """Limpa todo o banco de dados (reset)."""
     limpar_banco()
     return jsonify({"status": "ok", "msg": "Banco de dados limpo com sucesso."})
+
+
+@app.route("/api/mensagem/deletar/<message_id>", methods=["DELETE"])
+def api_deletar_mensagem(message_id):
+    """Remove uma mensagem específica do banco."""
+    deletar_mensagem(message_id)
+    return jsonify({"status": "ok", "msg": f"Mensagem {message_id} removida."})
 
 
 

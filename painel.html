@@ -778,14 +778,8 @@
                 <div class="stat-val" id="s-pend">—</div>
                 <div class="stat-label">Pendentes</div>
             </div>
-            <div class="stat-box">
-                <div class="stat-val" id="s-integ">—</div>
-                <div class="stat-label">Média Integridade</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-val" id="s-lat">—</div>
-                <div class="stat-label">Média Latência</div>
-            </div>
+            <div class="stat-box"><div class="stat-val" id="s-integ">—</div><div class="stat-label">Média Integridade</div></div>
+            <div class="stat-box"><div class="stat-val" id="s-lat">—</div><div class="stat-label">Média Latência</div></div>
         </div>
 
         <div class="card">
@@ -1144,6 +1138,7 @@
                                 <span style="font-size:.72rem;color:var(--muted);">${m.total_pacotes} pacotes · ${m.ts_recebido || ''}</span>
                                 <button class="btn" style="font-size:.7rem;padding:4px 10px;" onclick="irParaValidar('${m.message_id}')" title="Validar esta mensagem">🔍 Validar</button>
                                 <button class="btn" style="font-size:.7rem;padding:4px 10px;" onclick="navigator.clipboard.writeText('${m.message_id}')" title="Copiar ID">📋 Copiar ID</button>
+                                <button class="btn btn-danger" style="font-size:.7rem;padding:4px 10px;" onclick="deletarMensagem(event, '${m.message_id}')" title="Excluir mensagem">🗑️</button>
                             </div>
                         </div>
                         <div class="msg-text">${m.texto}</div>
@@ -1169,12 +1164,20 @@
         }
 
         async function limparBanco() {
-            if (!confirm('⚠️ Tem certeza? Isso vai apagar TODOS os dados!')) return;
+            // Removido a pedido do usuário
+        }
+
+        async function deletarMensagem(event, id) {
+            event.stopPropagation(); // Evita que clique no botão dispare o card
+            if (!confirm('Excluir esta mensagem permanentemente?')) return;
             try {
-                await fetch(API + '/api/limpar', { method: 'POST' });
-                alert('✅ Banco limpo!');
-                fetchDados(); fetchStats(); fetchMensagens();
-            } catch (e) { alert('Erro!'); }
+                const r = await fetch(API + '/api/mensagem/deletar/' + id, { method: 'DELETE' });
+                if (r.ok) {
+                    fetchMensagens();
+                    fetchStats();
+                    fetchDados();
+                }
+            } catch(e) { alert('Erro ao deletar: ' + e); }
         }
 
         /* ── Validador ──────────────────────────── */

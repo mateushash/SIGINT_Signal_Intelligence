@@ -2,6 +2,7 @@
 validador.py — Semana 5 e 6
 ============================
 Serviço de Validação de Palavras via DP e Dicionário Local.
+Otimizado para evitar fragmentação de palavras e reconhecer verbos comuns.
 """
 
 import os
@@ -18,7 +19,16 @@ def normalizar(palavra: str) -> str:
         if unicodedata.category(c) != 'Mn'
     )
 
-# ─── CARREGAMENTO DO DICIONÁRIO COMPLETO PT-BR ──────────────────────────────
+# ─── CONFIGURAÇÃO DE RUÍDO LINGUÍSTICO ──────────────────────────────────────
+# Palavras curtas REAIS.
+PARTICULAS_VALIDAS = {
+    "A","O","E","UM","UNS","UMA","UMAS","DE","DA","DO","DAS","DOS","EM","NO","NA","NOS","NAS",
+    "AO","AOS","COMO","QUE","SE","OU","MAS","MAIS","POR","PARA","COM","SOU","FOI","ERA","TEM","VAI",
+    "SER","TER","IR","VIR","DAR","DIZ","FAZ","BOA","BOM","MAL","BEM","DIA","PAI","MAE","CEU","RIO",
+    "EU","TU","ELE","ELA","NOS","VOS","MEU","TEU","SEU","NOSSA","NOSSO","VOSSAS","VOSSOS","OLA","OI","SIM","NAO",
+    "ATE","SOB","SAO","ESTA","TEMOS","TIVE","PODE","PUDO","QUER","VAI","VEM","DOU","FUI","FOI","FUI","ERA","ESTA"
+}
+
 PALAVRAS_PT = set()
 DIC_FILE = os.path.join(os.path.dirname(__file__), "palavras.txt")
 
@@ -26,13 +36,9 @@ def carregar_dicionario():
     global PALAVRAS_PT
     if not os.path.exists(DIC_FILE):
         try:
-            print("[Validador] Baixando dicionário PT-BR completo...")
             r = requests.get("https://raw.githubusercontent.com/pythonprobr/palavras/master/palavras.txt")
-            with open(DIC_FILE, "wb") as f:
-                f.write(r.content)
-            print("[Validador] Download concluído!")
-        except Exception as e:
-            print(f"[Validador] Aviso: Falha no download - {e}")
+            with open(DIC_FILE, "wb") as f: f.write(r.content)
+        except: pass
     
     if os.path.exists(DIC_FILE):
         try:
@@ -41,16 +47,23 @@ def carregar_dicionario():
                     w = w.strip()
                     if w.isalpha():
                         norm = normalizar(w).upper()
-                        # Filtra ruído: apenas permite letras soltas se forem A, E, O, U
-                        if len(norm) == 1 and norm not in {"A", "E", "O", "U"}:
+                        # FILTRO RADICAL:
+                        # 1. Nenhuma letra solta exceto A, O, E.
+                        if len(norm) == 1 and norm not in {"A", "O", "E"}:
+                            continue
+                        # 2. Palavras de 2-3 letras so entram se forem conhecidas.
+                        if len(norm) <= 3 and norm not in PARTICULAS_VALIDAS:
                             continue
                         PALAVRAS_PT.add(norm)
-            print(f"[Validador] Dicionário carregado com {len(PALAVRAS_PT)} palavras locais.")
-        except Exception as e:
-            print(f"[Validador] Aviso: Erro ao ler dicionário local - {e}")
+        except: pass
 
-    basicas = {"O","A","E","DO","DA","NO","NA","UM","UMA","OS","AS","EU","TU","ELE","NOS","SOU","TENHO","AMIGO","BRASIL"}
-    PALAVRAS_PT.update(basicas)
+    PALAVRAS_PT.update(PARTICULAS_VALIDAS)
+    # Verbos e palavras comuns extras
+    PALAVRAS_PT.update({
+        "FUI", "FOI", "FOMOS", "FORAM", "FIZ", "FEZ", "FIZEMOS", "FIZERAM",
+        "TENHO", "TEM", "TEMOS", "TENHAM", "HOJE", "ONTEM", "AMANHA",
+        "JOGAR", "BOLA", "FUTEBOL", "PROVA", "ESCOLA", "AMIGO", "GENTE"
+    })
 
 carregar_dicionario()
 
@@ -59,20 +72,18 @@ _cache = {}
 
 def verificar_api(palavra: str) -> bool:
     chave = normalizar(palavra)
-    if chave in _cache:
-        return _cache[chave]
-
+    if chave in _cache: return _cache[chave]
     try:
-        r = requests.get(f"https://api.dicionario-aberto.net/word/{chave}", headers=HEADERS, timeout=3)
+        r = requests.get(f"https://api.dicionario-aberto.net/word/{chave}", headers=HEADERS, timeout=2)
         if r.status_code == 200:
             dados = r.json()
             valida = isinstance(dados, list) and len(dados) > 0 and not dados[0].get("deleted", 1)
             _cache[chave] = valida
             return valida
     except: pass
-
     try:
-        r = requests.get(f"https://api.dictionaryapi.dev/api/v2/entries/en/{chave}", headers=HEADERS, timeout=3)
+        # Fallback para dicionário mais amplo
+        r = requests.get(f"https://api.dictionaryapi.dev/api/v2/entries/en/{chave}", headers=HEADERS, timeout=1)
         valida = r.status_code == 200
         _cache[chave] = valida
         return valida
@@ -80,10 +91,8 @@ def verificar_api(palavra: str) -> bool:
         _cache[chave] = False
         return False
 
-
 # ─── SEGMENTAÇÃO COM PROGRAMAÇÃO DINÂMICA ─────────────────────────────────────
 def segmentar_local(texto: str) -> list[str]:
-    # Importante: converter para UPPER aqui para bater com o set PALAVRAS_PT
     texto = normalizar(texto).upper().replace(" ", "")
     n = len(texto)
     if n == 0: return []
@@ -117,25 +126,19 @@ def segmentar_local(texto: str) -> list[str]:
         _, _, next_split = dp[curr]
         resultado.append(texto[curr:next_split])
         curr = next_split
-
     return resultado
-
 
 # ─── VALIDAÇÃO FINAL ──────────────────────────────────────────────────────────
 def validar_mensagem(texto_bruto: str) -> dict:
     inicio = time.time()
-    texto_limpo = texto_bruto.upper().strip()
+    texto_limpo = texto_bruto.upper().strip().replace(" ", "")
 
-    if " " in texto_limpo:
-        palavras_segmentadas = texto_limpo.split()
-    else:
-        palavras_segmentadas = segmentar_local(texto_limpo)
-
+    palavras_segmentadas = segmentar_local(texto_limpo)
     resultados = []
+    
     for p in palavras_segmentadas:
         chave = normalizar(p).upper()
-        # Se a palavra for muito curta ou estiver na lista local, consideramos valida
-        if (len(p) <= 2 and chave in {"A","O","E","UM","OS","AS","EU","TU","IR","NO","NA"}) or chave in PALAVRAS_PT:
+        if chave in PALAVRAS_PT:
             valida = True
         else:
             valida = verificar_api(p)
@@ -145,8 +148,7 @@ def validar_mensagem(texto_bruto: str) -> dict:
     total = len(resultados)
     validas = sum(1 for r in resultados if r["valida"])
     score = round((validas / total) * 100, 1) if total else 0.0
-    tempo_ms = round((time.time() - inicio) * 1000, 1)
-
+    
     return {
         "texto_original": texto_bruto,
         "texto_reconstruido": texto_reconstruido,
@@ -154,6 +156,6 @@ def validar_mensagem(texto_bruto: str) -> dict:
         "total_palavras": total,
         "palavras_validas": validas,
         "score_validacao": score,
-        "tempo_ms": tempo_ms,
-        "api_usada": "Dicionário Local (320k) + Dicionario-aberto.net"
+        "tempo_ms": round((time.time() - inicio) * 1000, 1),
+        "api_usada": "Dicionário Híbrido (DP + Local Limpo)"
     }
