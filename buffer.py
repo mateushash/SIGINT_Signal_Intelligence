@@ -10,6 +10,7 @@ import uuid
 import pika
 import json
 import time
+from validador import validar_mensagem
 
 RABBITMQ_HOST = "localhost"
 SERVER_START_TIME = time.time()
@@ -209,6 +210,25 @@ def api_limpar():
     limpar_banco()
     return jsonify({"status": "ok", "msg": "Banco de dados limpo com sucesso."})
 
+
+
+
+@app.route("/api/validar/<message_id>", methods=["GET"])
+def api_validar(message_id):
+    """
+    Valida o texto decodificado usando API de dicionario portugues.
+    Tenta reconstruir espacos perdidos entre palavras grudadas.
+    """
+    pacotes = buscar_pacotes_da_mensagem(message_id)
+    if not pacotes:
+        return jsonify({"status": "erro", "msg": "Mensagem nao encontrada"}), 404
+
+    texto_bruto = "".join([p.get("mensagem_decodificada") or "" for p in pacotes])
+    if not texto_bruto.strip():
+        return jsonify({"status": "erro", "msg": "Mensagem vazia ou ainda processando"}), 400
+
+    resultado = validar_mensagem(texto_bruto)
+    return jsonify({"status": "ok", "message_id": message_id, **resultado})
 
 if __name__ == "__main__":
     criar_tabela()

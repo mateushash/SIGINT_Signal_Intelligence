@@ -139,7 +139,7 @@ def buscar_status_geral():
     cursor = conn.cursor()
     # Puxa os últimos 50 pacotes para ver o progresso ao vivo no Frontend
     cursor.execute("""
-        SELECT message_id, ordem, total, status, mensagem_decodificada
+        SELECT message_id, ordem, total, status, mensagem_decodificada, pedaco
         FROM pacotes
         ORDER BY id DESC LIMIT 50
     """)
@@ -153,7 +153,8 @@ def buscar_status_geral():
             "ordem": p[1],
             "total": p[2],
             "status": p[3],
-            "texto": p[4] or ""
+            "texto": p[4] or "",
+            "morse": p[5] or ""
         })
     return lista
 
@@ -165,7 +166,7 @@ def buscar_pacotes_da_mensagem(message_id: str) -> list:
     conn = conectar()
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT id, ordem, total, mensagem_decodificada, ts_recebido, ts_processado
+        SELECT id, ordem, total, mensagem_decodificada, ts_recebido, ts_processado, pedaco
         FROM pacotes
         WHERE message_id = ?
         ORDER BY ordem ASC
@@ -181,6 +182,7 @@ def buscar_pacotes_da_mensagem(message_id: str) -> list:
             "mensagem_decodificada": p[3],
             "ts_recebido":           p[4],
             "ts_processado":         p[5],
+            "morse":                 p[6] or ""
         }
         for p in linhas
     ]

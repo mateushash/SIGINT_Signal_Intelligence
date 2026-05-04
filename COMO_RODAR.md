@@ -18,6 +18,7 @@ Para iniciar o RabbitMQ no Docker e todos os serviços Python de uma só vez, ab
 # Entre na pasta do projeto pelo terminal e rode:
 chmod +x start.sh stop.sh
 ./start.sh
+# depois o comando `python3 sending_test.py` para enviar mensagem de teste
 ```
 
 > [!IMPORTANT]
