@@ -1,14 +1,7 @@
-# 🐰 Manual do Criasdecrip (Semanas 1 a 6)
-
-Este projeto foi construído cobrindo **todos os requisitos** pedidos:
-
-✅ **Semana 1 e 2:** Arquitetura centralizada + Fila (RabbitMQ) + Ingestão via Buffer + Persistência crua no SQLite (tabela `pacotes`).  
-✅ **Semana 3 e 4:** Processamento isolado (Worker real com RabbitMQ) + Serviço de Score/Modelo para métricas + Salvar resultados no SQLite (tabela `scores`).  
-✅ **Semana 5 e 6:** API REST completa + Dashboard profissional + Endpoints mínimos (health, stats, export, etc).
-
+# 🐰 Manual do Criasdecrip
 ---
 
-## 🟢 1. Como INICIAR tudo (Ligar o sistema)
+##  1. Como INICIAR tudo (Ligar o sistema)
 
 Para iniciar o RabbitMQ no Docker e todos os serviços Python de uma só vez, abra o terminal e rode:
 
@@ -31,7 +24,7 @@ chmod +x start.sh stop.sh
 
 ---
 
-## 🛑 2. Como PARAR tudo (Desligar o sistema)
+##  2. Como PARAR tudo (Desligar o sistema)
 
 Você pode desligar tudo de uma vez. No terminal, rode:
 
@@ -42,7 +35,7 @@ Você pode desligar tudo de uma vez. No terminal, rode:
 
 ---
 
-## 💻 3. Como rodar MANUALMENTE (Modo 4 Terminais)
+##  3. Como rodar MANUALMENTE (Modo 4 Terminais)
 
 Se você quiser ver os logs acontecendo em tempo real, não use o `./start.sh`. Siga os passos abaixo:
 
@@ -59,7 +52,7 @@ Nesse formato, todos os terminais vão piscar mostrando o que estão fazendo por
 
 ---
 
-## 📱 4. Como ver os resultados e testar
+##  4. Como ver os resultados e testar
 
 Com o sistema rodando (`./start.sh`):
 
@@ -70,10 +63,10 @@ python3 sending_test.py
 
 **2. Ver o Dashboard:**
 Apenas dê dois cliques (ou abra no Live Server) o arquivo `painel.html` que está na sua pasta.
-- Aba **📡 Monitor**: Mostra os pacotes brutos sendo processados em tempo real.
-- Aba **📊 Scores**: Mostra o cálculo das métricas de integridade, reconstrução e latência.
-- Aba **💬 Mensagens**: Lista todas as mensagens decodificadas + botão de exportar JSON e limpar banco.
-- Aba **🔌 API Docs**: Documentação de todos os endpoints REST disponíveis.
+- Aba **Monitor**: Mostra os pacotes brutos sendo processados em tempo real.
+- Aba **Scores**: Mostra o cálculo das métricas de integridade, reconstrução e latência.
+- Aba **Mensagens**: Lista todas as mensagens decodificadas + botão de exportar JSON e limpar banco.
+- Aba **API Docs**: Documentação de todos os endpoints REST disponíveis.
 
 **3. Ver na Central via Terminal (Extra):**
 ```bash
@@ -83,7 +76,7 @@ python3 central.py
 
 ---
 
-## 🔌 5. Endpoints da API REST (Semana 5 e 6)
+##  5. Endpoints da API REST (Semana 5 e 6)
 
 Todos os endpoints rodam em `http://localhost:5050`.
 

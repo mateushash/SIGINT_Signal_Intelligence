@@ -778,8 +778,14 @@
                 <div class="stat-val" id="s-pend">—</div>
                 <div class="stat-label">Pendentes</div>
             </div>
-            <div class="stat-box"><div class="stat-val" id="s-integ">—</div><div class="stat-label">Média Integridade</div></div>
-            <div class="stat-box"><div class="stat-val" id="s-lat">—</div><div class="stat-label">Média Latência</div></div>
+            <div class="stat-box">
+                <div class="stat-val" id="s-integ">—</div>
+                <div class="stat-label">Média Integridade</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val" id="s-lat">—</div>
+                <div class="stat-label">Média Latência</div>
+            </div>
         </div>
 
         <div class="card">
@@ -1177,7 +1183,7 @@
                     fetchStats();
                     fetchDados();
                 }
-            } catch(e) { alert('Erro ao deletar: ' + e); }
+            } catch (e) { alert('Erro ao deletar: ' + e); }
         }
 
         /* ── Validador ──────────────────────────── */

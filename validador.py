@@ -2,7 +2,7 @@
 validador.py — Semana 5 e 6
 ============================
 Serviço de Validação de Palavras via DP e Dicionário Local.
-Otimizado para evitar fragmentação de palavras e reconhecer verbos comuns.
+Otimizado para evitar fragmentação e reconhecer verbos comuns.
 """
 
 import os
@@ -20,13 +20,12 @@ def normalizar(palavra: str) -> str:
     )
 
 # ─── CONFIGURAÇÃO DE RUÍDO LINGUÍSTICO ──────────────────────────────────────
-# Palavras curtas REAIS.
 PARTICULAS_VALIDAS = {
     "A","O","E","UM","UNS","UMA","UMAS","DE","DA","DO","DAS","DOS","EM","NO","NA","NOS","NAS",
     "AO","AOS","COMO","QUE","SE","OU","MAS","MAIS","POR","PARA","COM","SOU","FOI","ERA","TEM","VAI",
     "SER","TER","IR","VIR","DAR","DIZ","FAZ","BOA","BOM","MAL","BEM","DIA","PAI","MAE","CEU","RIO",
     "EU","TU","ELE","ELA","NOS","VOS","MEU","TEU","SEU","NOSSA","NOSSO","VOSSAS","VOSSOS","OLA","OI","SIM","NAO",
-    "ATE","SOB","SAO","ESTA","TEMOS","TIVE","PODE","PUDO","QUER","VAI","VEM","DOU","FUI","FOI","FUI","ERA","ESTA"
+    "ATE","SOB","SAO","ESTA","TEMOS","TIVE","PODE","PUDO","QUER","VAI","VEM","DOU","FUI","FOI","ERA","ESTA"
 }
 
 PALAVRAS_PT = set()
@@ -47,22 +46,22 @@ def carregar_dicionario():
                     w = w.strip()
                     if w.isalpha():
                         norm = normalizar(w).upper()
-                        # FILTRO RADICAL:
-                        # 1. Nenhuma letra solta exceto A, O, E.
                         if len(norm) == 1 and norm not in {"A", "O", "E"}:
                             continue
-                        # 2. Palavras de 2-3 letras so entram se forem conhecidas.
                         if len(norm) <= 3 and norm not in PARTICULAS_VALIDAS:
                             continue
                         PALAVRAS_PT.add(norm)
         except: pass
 
+    # EXPANSÃO DE VERBOS E PALAVRAS COMUNS (Conserta o fatiamento)
     PALAVRAS_PT.update(PARTICULAS_VALIDAS)
-    # Verbos e palavras comuns extras
     PALAVRAS_PT.update({
         "FUI", "FOI", "FOMOS", "FORAM", "FIZ", "FEZ", "FIZEMOS", "FIZERAM",
         "TENHO", "TEM", "TEMOS", "TENHAM", "HOJE", "ONTEM", "AMANHA",
-        "JOGAR", "BOLA", "FUTEBOL", "PROVA", "ESCOLA", "AMIGO", "GENTE"
+        "JOGAR", "BOLA", "FUTEBOL", "PROVA", "ESCOLA", "AMIGO", "GENTE",
+        "TESTANDO", "TESTE", "TESTAR", "TESTA", "ESTOU", "ESTA", "ESTAMOS",
+        "ESTAO", "FAZENDO", "COMENDO", "VENDO", "LENDO", "DORMINDO",
+        "BRASIL", "PORTUGUES", "SISTEMA", "CODIGO", "MENSAGEM", "PACIFICO"
     })
 
 carregar_dicionario()
@@ -82,7 +81,6 @@ def verificar_api(palavra: str) -> bool:
             return valida
     except: pass
     try:
-        # Fallback para dicionário mais amplo
         r = requests.get(f"https://api.dictionaryapi.dev/api/v2/entries/en/{chave}", headers=HEADERS, timeout=1)
         valida = r.status_code == 200
         _cache[chave] = valida
@@ -157,5 +155,5 @@ def validar_mensagem(texto_bruto: str) -> dict:
         "palavras_validas": validas,
         "score_validacao": score,
         "tempo_ms": round((time.time() - inicio) * 1000, 1),
-        "api_usada": "Dicionário Híbrido (DP + Local Limpo)"
+        "api_usada": "Dicionário Híbrido (DP + Local + API)"
     }

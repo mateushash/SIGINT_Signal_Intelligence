@@ -1,0 +1,52 @@
+================================================================================
+ GUIA DE EXPLICAÇÃO - PROJETO CRIASDECRIP (SIGINT)
+================================================================================
+
+1. O QUE É O PROJETO? (A UTILIDADE REAL)
+--------------------------------------------------------------------------------
+Este é um sistema de SIGINT (Signal Intelligence - Inteligência de Sinais). 
+Ele simula a interceptação de comunicações de rádio (em Morse/Binário) e as 
+transforma em texto legível automaticamente.
+
+Cenário: Uma transmissão militar ou de rádio antiga é interceptada. O sinal vem 
+como um "bloco" de dados binários sem espaços. O sistema decodifica, reconstrói 
+as palavras e valida se a mensagem é real.
+
+2. ONDE ESTÁ A API NO CÓDIGO?
+--------------------------------------------------------------------------------
+Arquivo: validador.py (Função: verificar_api)
+
+O sistema usa uma abordagem HÍBRIDA:
+- Dicionário Local: 320 mil palavras (para velocidade instantânea).
+- APIs Externas: Dicionario-aberto.net e DictionaryAPI.dev.
+
+Se o dicionário local não conhece a palavra, o sistema faz uma requisição REST 
+para as APIs na nuvem para confirmar se a palavra existe. Isso garante que o 
+sistema aprenda palavras novas sem precisar baixar arquivos gigantes.
+
+3. PONTOS CHAVE:
+--------------------------------------------------------------------------------
+A) Programação Dinâmica (DP): No validador.py, usamos o algoritmo de DP para 
+   decidir onde colocar os espaços na frase. Ele calcula o "custo" de cada 
+   combinação e escolhe a que forma palavras reais. 
+   Ex: "EUSOUAMIGO" -> Vira "EU SOU AMIGO".
+
+B) Arquitetura Distribuída (RabbitMQ): Usamos filas para separar o Buffer (que 
+   recebe o sinal) do Worker (que decodifica). 
+   Vantagem: ESCALABILIDADE. Se tivermos milhões de sinais, basta ligar mais 
+   computadores (Workers) para processar tudo em paralelo.
+
+C) Score de Integridade: O score_service.py audita a qualidade da mensagem. 
+   Se houver ruído (caracteres '?'), o score cai, alertando que o sinal 
+   interceptado está ruim.
+
+4. TECNOLOGIAS UTILIZADAS:
+--------------------------------------------------------------------------------
+- Python: Backend e Lógica.
+- Flask: Servidor de Buffer (API REST).
+- RabbitMQ: Mensageria e Fila de processamento distribuído.
+- SQLite: Banco de dados para persistência e logs.
+- HTML/CSS/JS: Dashboard de monitoramento em tempo real.
+- APIs Externas: Validação linguística remota.
+
+================================================================================
