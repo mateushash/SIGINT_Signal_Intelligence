@@ -12,7 +12,7 @@ echo -e "${ORANGE}🚀 INICIANDO O SISTEMA CRIASDECRIP (Semana 1 a 4)${NC}"
 echo -e "${ORANGE}===================================================${NC}"
 
 echo -e "${BLUE}1️⃣  Iniciando RabbitMQ no Docker...${NC}"
-docker start rabbitmq > /dev/null 2>&1 || docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management > /dev/null 2>&1
+docker start rabbitmq || docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 
 echo -e "${BLUE}⏳ Aguardando RabbitMQ estabilizar (Pode levar alguns segundos)...${NC}"
 # Loop de verificação de porta (espera real em vez de sleep cego)
@@ -35,11 +35,11 @@ pkill -f "score_service.py"
 sleep 1
 
 echo -e "${BLUE}3️⃣  Iniciando serviços em segundo plano...${NC}"
-python3 buffer.py > buffer.log 2>&1 &
+python3 -u buffer.py > buffer.log 2>&1 &
 echo -e "   [OK] Buffer (Porta 5050)"
-python3 worker_rabbit.py > worker.log 2>&1 &
+python3 -u worker_rabbit.py > worker.log 2>&1 &
 echo -e "   [OK] Worker (RabbitMQ Consumer)"
-python3 score_service.py > score.log 2>&1 &
+python3 -u score_service.py > score.log 2>&1 &
 echo -e "   [OK] Score Service (Evaluator)"
 
 echo -e "\n${GREEN}✅ TUDO PRONTO! O SISTEMA ESTÁ VOANDO!${NC}\n"
