@@ -1,13 +1,13 @@
-from transformer_morse import texto_para_morse, morse_para_binario
+import sys
+import os
 import requests
 
-texto = input("Digite a Mensagem:")
-# texto = """seu Você me perguntou recentemente por que eu afirmo ter medo de você. Como de costume, não soube responder, em parte justamente por causa do medo que tenho de você, em parte porque na motivação desse medo intervêm tantos pormenores, que mal poderia reuni-los numa fala. E se aqui tento responder por escrito, será sem dúvida de um modo muito incompleto, porque, também ao escrever, o medo e suas consequências me inibem diante de você e porque a magnitude do assunto ultrapassa de longe minha memória e meu entendimento."""
+# Adiciona o diretório src ao path para permitir imports
+sys.path.append(os.path.join(os.getcwd(), 'src'))
 
-'''
-Mensagem antiga:
-A otimização prematura é a raiz de todo mal
-'''
+from transformer_morse import texto_para_morse, morse_para_binario
+
+texto = input("Digite a Mensagem:")
 
 morse = texto_para_morse(texto)
 binario = morse_para_binario(morse)

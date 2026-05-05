@@ -29,7 +29,7 @@ PARTICULAS_VALIDAS = {
 }
 
 PALAVRAS_PT = set()
-DIC_FILE = os.path.join(os.path.dirname(__file__), "palavras.txt")
+DIC_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "palavras.txt")
 
 def carregar_dicionario():
     global PALAVRAS_PT
