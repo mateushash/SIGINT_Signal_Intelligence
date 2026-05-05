@@ -756,10 +756,11 @@
     <div class="hero">
         <h1>SIGINT</h1>
         <p>Sistema de decodificação de sinais</p>
-        <div class="hero-badge" id="health-badge"><span class="dot dot-red"></span> Conectando...</div>
-    </div>
-
-    <div class="main">
+        <div class="hero-badge" id="health-badge">
+            <span id="api-status-dot" class="dot"></span>
+            <span id="api-port-label">Conectando...</span>
+        </div>
+    </div>    <div class="main">
         <!-- STATS -->
         <div class="stats" id="stats-row">
             <div class="stat-box">
@@ -979,7 +980,28 @@
     </div>
 
     <script>
-        const API = 'http://localhost:5050';
+        let API = 'http://localhost:5050';
+        const PORTAS = ['5050', '5051'];
+
+        async function checkHealth() {
+            for (let porta of PORTAS) {
+                const url = `http://localhost:${porta}`;
+                try {
+                    const r = await fetch(url + '/api/health', { signal: AbortSignal.timeout(1000) });
+                    if (r.ok) {
+                        API = url;
+                        document.getElementById('api-status-dot').style.background = 'var(--green)';
+                        document.getElementById('api-port-label').innerText = `Buffer: ${porta}`;
+                        return;
+                    }
+                } catch(e) {}
+            }
+            document.getElementById('api-status-dot').style.background = 'var(--red)';
+            document.getElementById('api-port-label').innerText = 'Offline';
+        }
+
+        setInterval(checkHealth, 5000);
+        checkHealth();
         let dadosGlobais = [], pausado = false;
 
         /* ── Abas ─────────────────────────────── */

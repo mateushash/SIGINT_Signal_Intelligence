@@ -238,6 +238,10 @@ def api_validar(message_id):
     return jsonify({"status": "ok", "message_id": message_id, **resultado})
 
 if __name__ == "__main__":
+    import sys
+    # Permite passar a porta via linha de comando: python3 buffer.py 5051
+    porta = int(sys.argv[1]) if len(sys.argv) > 1 else 5050
+    
     criar_tabela()
-    print("[Buffer] ✅ Banco de dados pronto. Iniciando servidor na porta 5050...")
-    app.run(port=5050, debug=False)
+    print(f"[Buffer] ✅ Banco de dados pronto. Iniciando servidor na porta {porta}...")
+    app.run(port=porta, debug=False, host='0.0.0.0')
