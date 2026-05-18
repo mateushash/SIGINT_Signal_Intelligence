@@ -106,6 +106,21 @@ def morse_stream_para_texto(morse_stream: str) -> str:
     return resultado
 
 
+def decifrar_cesar(texto: str, deslocamento: int = 3) -> str:
+    texto = texto.upper()
+    resultado = ""
+    for letra in texto:
+        if letra == " ":
+            resultado += " "
+        elif "A" <= letra <= "Z":
+            codigo = ord(letra) - ord("A")
+            codigo = (codigo - deslocamento) % 26
+            resultado += chr(codigo + ord("A"))
+        else:
+            resultado += letra
+    return resultado
+
+
 def processar_mensagem(ch, method, properties, body):
     """
     Callback chamado pelo pika para cada mensagem consumida da fila.
@@ -117,29 +132,35 @@ def processar_mensagem(ch, method, properties, body):
         id_pacote  = dados["id"]
         message_id = dados["message_id"]
         conteudo   = dados["conteudo"]
+        cifra      = dados.get("cifra", "&")
         ordem      = dados["ordem"]
         total      = dados["total"]
 
-        print(f"\n[Worker] ▶ Pacote {ordem+1}/{total} | msg={message_id[:8]}...")
+        print(f"\n[Worker] ▶ Pacote {ordem+1}/{total} | msg={message_id[:8]}... | cifra={cifra}")
 
         # Se é o primeiro pacote de uma mensagem, reseta os buffers
         if ordem == 0:
             resetar_buffers()
 
-        # 1. Binário → morse parcial
-        morse_parcial = processar_stream_binario(conteudo)
+        if cifra == "$":
+            # 1. Descriptografa César diretamente do texto recebido
+            texto = decifrar_cesar(conteudo)
+            print(f"[Worker] ✅ Descriptografado César: '{texto}'")
+        else:
+            # 1. Binário → morse parcial
+            morse_parcial = processar_stream_binario(conteudo)
 
-        # 2. Morse parcial → texto
-        texto = morse_stream_para_texto(morse_parcial)
+            # 2. Morse parcial → texto
+            texto = morse_stream_para_texto(morse_parcial)
 
-        # Se é o último pacote, força a leitura do que ficou no buffer morse
-        if ordem == total - 1:
-            restante = _buffer_morse.strip()
-            if restante and restante in MORSE_REV:
-                texto += MORSE_REV[restante]
-            _buffer_morse = ""
+            # Se é o último pacote, força a leitura do que ficou no buffer morse
+            if ordem == total - 1:
+                restante = _buffer_morse.strip()
+                if restante and restante in MORSE_REV:
+                    texto += MORSE_REV[restante]
+                _buffer_morse = ""
 
-        print(f"[Worker] ✅ Decodificado: '{texto}'")
+            print(f"[Worker] ✅ Decodificado: '{texto}'")
 
         # 3. Devolve resultado ao Buffer via HTTP
         resposta = requests.post(BUFFER_URL, json={

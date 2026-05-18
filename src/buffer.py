@@ -42,24 +42,28 @@ def publicar(fila: str, corpo: dict):
         return False
 
 
-def dividir_adaptativo(binario, limite=300):
-    palavras = binario.split("0000000")
-    partes = []
-    atual = ""
-    for palavra in palavras:
-        bloco = palavra + "0000000"
-        if len(bloco) > limite:
-            for i in range(0, len(bloco), limite):
-                partes.append(bloco[i:i+limite])
-            continue
-        if len(atual) + len(bloco) <= limite:
-            atual += bloco
-        else:
+def dividir_adaptativo(conteudo, cifra, limite=300):
+    if cifra == "&":
+        palavras = conteudo.split("0000000")
+        partes = []
+        atual = ""
+        for palavra in palavras:
+            bloco = palavra + "0000000"
+            if len(bloco) > limite:
+                for i in range(0, len(bloco), limite):
+                    partes.append(bloco[i:i+limite])
+                continue
+            if len(atual) + len(bloco) <= limite:
+                atual += bloco
+            else:
+                partes.append(atual)
+                atual = bloco
+        if atual:
             partes.append(atual)
-            atual = bloco
-    if atual:
-        partes.append(atual)
-    return partes
+        return partes
+
+    # Para texto simples (César), divide em pedaços de tamanho fixo
+    return [conteudo[i:i+limite] for i in range(0, len(conteudo), limite)]
 
 
 @app.route("/receber", methods=["POST"])
@@ -69,8 +73,8 @@ def receber():
     cifra = dados["cifra"]
     message_id = str(uuid.uuid4())
 
-    partes = dividir_adaptativo(mensagem)
-    print(f"\n[Buffer] Mensagem recebida com {len(partes)} pacotes")
+    partes = dividir_adaptativo(mensagem, cifra)
+    print(f"\n[Buffer] Mensagem recebida com {len(partes)} pacotes (cifra={cifra})")
 
     for i, p in enumerate(partes):
         id_registro = inserir_registro(message_id, i, len(partes), p, cifra)
