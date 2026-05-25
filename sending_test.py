@@ -2,11 +2,15 @@ import sys
 import os
 import requests
 
-# Adiciona o diretório src ao path para permitir imports
-sys.path.append(os.path.join(os.getcwd(), 'src'))
+# Adiciona o diretório src de forma absoluta e prioritária ao path
+_script_dir = os.path.dirname(os.path.abspath(__file__))
+_src_dir = os.path.join(_script_dir, 'src')
+if _src_dir not in sys.path:
+    sys.path.insert(0, _src_dir)
 
-from transformer_morse import texto_para_morse, morse_para_binario
-from transformer_cesar import texto_para_cesar
+from src.transformer_morse import texto_para_morse, morse_para_binario
+from src.transformer_cesar import texto_para_cesar
+
 
 print("Modo de envio:")
 print("1 - Morse")
