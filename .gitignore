@@ -10,6 +10,8 @@ venv/
 # Logs e DB
 *.log
 *.db
+*.db-shm    # SQLite WAL shared memory
+*.db-wal    # SQLite WAL write-ahead log
 
 # Node
 node_modules/
