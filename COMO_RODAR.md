@@ -53,6 +53,24 @@ Se você quiser ver os logs acontecendo em tempo real:
 
 ---
 
+## 3.1 Rodar só o worker em outra máquina via Tailscale
+
+Na máquina remota, aponte o worker para o IP Tailscale da máquina que roda o RabbitMQ e o Buffer:
+
+```bash
+export SIGINT_RABBITMQ_HOST=100.107.140.27
+export SIGINT_BUFFER_URL=http://100.107.140.27:5050/retorno
+./start_worker.sh
+```
+
+Se preferir, rode direto:
+
+```bash
+SIGINT_RABBITMQ_HOST=100.107.140.27 SIGINT_BUFFER_URL=http://100.107.140.27:5050/retorno python3 src/worker_rabbit.py
+```
+
+---
+
 ## 4. Como ver os resultados e testar
 
 **1. Enviar uma mensagem de teste:**
@@ -61,7 +79,8 @@ python3 sending_test.py
 ```
 
 **2. Ver o Dashboard:**
-Abra o arquivo `web/painel.html` no Chrome.
+Abra o arquivo `web/painel.html` no Chrome. Se a API estiver em outra máquina da Tailscale, passe o host na URL:
+`web/painel.html?host=100.107.140.27`
 
 **3. Ver na Central via Terminal:**
 ```bash
@@ -72,7 +91,7 @@ python3 src/central.py
 
 ## 5. Endpoints da API REST
 
-Todos os endpoints rodam em `http://localhost:5050`.
+Todos os endpoints rodam em `http://<host>:5050` (por padrão, o host Tailscale configurado no dashboard).
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|

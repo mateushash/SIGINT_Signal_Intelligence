@@ -18,6 +18,7 @@ import json
 import requests
 import time
 import logging
+import os
 from datetime import datetime
 
 # ─── LOGGING ──────────────────────────────────────────────────────────────────
@@ -29,10 +30,10 @@ logging.basicConfig(
 logger = logging.getLogger("sigint.worker")
 
 # ─── CONFIGURAÇÕES ────────────────────────────────────────────────────────────
-RABBITMQ_HOST = "localhost"
+RABBITMQ_HOST = os.getenv("SIGINT_RABBITMQ_HOST", "100.107.140.27")  # Tailscale IP da máquina do RabbitMQ
 RABBITMQ_PORT = 5672
 FILA_ENTRADA = "fila_processamento"
-BUFFER_URL = "http://localhost:5050/retorno"
+BUFFER_URL = os.getenv("SIGINT_BUFFER_URL", "http://100.107.140.27:5050/retorno")
 
 # Retry config
 MAX_RETRIES = 5

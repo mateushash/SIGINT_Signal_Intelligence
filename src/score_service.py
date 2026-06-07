@@ -27,7 +27,7 @@ logging.basicConfig(
 logger = logging.getLogger("sigint.score")
 
 # ─── CONFIGURAÇÕES ────────────────────────────────────────────────────────────
-RABBITMQ_HOST = "localhost"
+RABBITMQ_HOST = "100.107.140.27"
 RABBITMQ_PORT = 5672
 FILA_SCORE = "fila_score"
 

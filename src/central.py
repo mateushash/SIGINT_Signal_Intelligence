@@ -2,7 +2,7 @@ import sys
 import time
 import requests
 
-BUFFER_API_URL = "http://localhost:5050/api/central"
+BUFFER_API_URL = "http://100.107.140.27:5050/api/central"
 
 def puxar_dados_do_banco():
     print("\n[Central] Checando o banco de dados por novas mensagens...")

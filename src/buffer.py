@@ -38,7 +38,7 @@ logging.basicConfig(
 logger = logging.getLogger("sigint.buffer")
 
 # ─── CONFIGURAÇÕES ────────────────────────────────────────────────────────────
-RABBITMQ_HOST = "localhost"
+RABBITMQ_HOST = "100.107.140.27"
 SERVER_START_TIME = time.time()
 
 app = Flask(__name__)

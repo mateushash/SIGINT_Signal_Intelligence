@@ -1,6 +1,31 @@
 /* ═══ SIGINT Dashboard — app.js (v2 icons + fixed layout + caching) ═══ */
-let API = 'http://localhost:5050';
+const DEFAULT_API_HOST = '100.107.140.27';
 const PORTAS = ['5050', '5051'];
+
+function resolveApiHost() {
+    const params = new URLSearchParams(window.location.search);
+    const hostname = window.location.hostname;
+    let storedHost = '';
+    try {
+        storedHost = localStorage.getItem('sigintApiHost') || '';
+    } catch (e) {}
+    const candidates = [
+        params.get('host'),
+        window.SIGINT_API_HOST,
+        storedHost,
+        hostname && hostname !== 'localhost' && hostname !== '127.0.0.1' ? hostname : '',
+    ].filter(Boolean);
+
+    return candidates[0] || DEFAULT_API_HOST;
+}
+
+const API_HOST = resolveApiHost();
+
+function buildApiUrl(port) {
+    return `http://${API_HOST}:${port}`;
+}
+
+let API = buildApiUrl(5050);
 let dadosGlobais = [], pausado = false, _visible = true;
 
 // Caches para evitar reflow do DOM e renderizações desnecessárias
@@ -15,14 +40,14 @@ document.addEventListener('visibilitychange', () => {
 
 async function checkHealth() {
     for (let porta of PORTAS) {
-        const url = `http://localhost:${porta}`;
+        const url = buildApiUrl(porta);
         try {
             const r = await fetch(url + '/api/health', { signal: AbortSignal.timeout(1500) });
             if (r.ok) {
                 if (API !== url) {
                     API = url;
                     document.getElementById('api-status-dot').className = 'dot dot-green';
-                    document.getElementById('api-port-label').innerText = `Buffer: ${porta}`;
+                    document.getElementById('api-port-label').innerText = `Buffer: ${API_HOST}:${porta}`;
                 }
                 return;
             }

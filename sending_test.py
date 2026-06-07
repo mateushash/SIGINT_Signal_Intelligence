@@ -11,6 +11,7 @@ if _src_dir not in sys.path:
 from src.transformer_morse import texto_para_morse, morse_para_binario
 from src.transformer_cesar import texto_para_cesar
 
+RESPONSE_BUFFER_URL = "http://100.107.140.27:5050/receber"
 
 print("Modo de envio:")
 print("1 - Morse")
@@ -34,7 +35,7 @@ elif modo == "2":
 print("Enviando mensagem pro buffer...")
 print(f"Tamanho da mensagem: {len(mensagem)}")
 
-response = requests.post("http://localhost:5050/receber", json={
+response = requests.post(RESPONSE_BUFFER_URL, json={
     "mensagem": mensagem,
     "cifra": cifra
 })
