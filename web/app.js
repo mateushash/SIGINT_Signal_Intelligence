@@ -102,6 +102,8 @@ async function fetchDados() {
         renderizar();
     } catch (e) {
         document.getElementById('logs').innerHTML = '<div class="vazio" style="color:var(--neon-red)">Buffer offline!</div>';
+        document.getElementById('resultados').innerHTML = '<div class="vazio" style="color:var(--neon-red)">Buffer offline!</div>';
+        dadosGlobais = [];
         dadosCache = "";
     }
 }
