@@ -34,10 +34,12 @@ elif modo == "2":
 print("Enviando mensagem pro buffer...")
 print(f"Tamanho da mensagem: {len(mensagem)}")
 
-response = requests.post("http://localhost:5050/receber", json={
-    "mensagem": mensagem,
-    "cifra": cifra
-})
-
-print("\nResposta do buffer:")
-print(response.json())
+try:
+    response = requests.post("http://localhost:8080/receber", json={
+        "mensagem": mensagem,
+        "cifra": cifra
+    }, timeout=5)
+    print("\nResposta do buffer:")
+    print(response.json())
+except requests.exceptions.RequestException as e:
+    print(f"❌ Falha crítica: Erro ao conectar no Load Balancer ({e})")

@@ -32,7 +32,7 @@ logger = logging.getLogger("sigint.worker")
 RABBITMQ_HOST = "localhost"
 RABBITMQ_PORT = 5672
 FILA_ENTRADA = "fila_processamento"
-BUFFER_URL = "http://localhost:5050/retorno"
+BUFFER_URL = "http://localhost:8080/retorno"
 
 # Retry config
 MAX_RETRIES = 5
@@ -235,16 +235,12 @@ def enviar_resultado(payload: dict) -> bool:
     """Envia resultado ao buffer com retry e backoff exponencial."""
     for tentativa in range(MAX_RETRIES):
         try:
-            resposta = requests.post(BUFFER_URL, json=payload, timeout=10)
-            if resposta.status_code == 200:
+            resp = requests.post(BUFFER_URL, json=payload, timeout=2)
+            if resp.status_code == 200:
+                logger.info(f"✔️ Resultado msg={payload['message_id'][:8]}... ordem={payload['ordem']} enviado ao LB")
                 return True
-            logger.warning(f"Buffer retornou {resposta.status_code} (tentativa {tentativa + 1})")
-        except requests.exceptions.ConnectionError:
-            logger.warning(f"Buffer offline (tentativa {tentativa + 1}/{MAX_RETRIES})")
-        except requests.exceptions.Timeout:
-            logger.warning(f"Timeout ao enviar para buffer (tentativa {tentativa + 1}/{MAX_RETRIES})")
-        except Exception as e:
-            logger.error(f"Erro inesperado ao enviar: {e}")
+        except requests.exceptions.RequestException:
+            pass
 
         if tentativa < MAX_RETRIES - 1:
             delay = RETRY_BASE_DELAY * (2 ** tentativa)

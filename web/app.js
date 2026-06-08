@@ -1,6 +1,6 @@
 /* ═══ SIGINT Dashboard — app.js (v2 icons + fixed layout + caching) ═══ */
-let API = 'http://localhost:5050';
-const PORTAS = ['5050', '5051'];
+let API = 'http://localhost:8080';
+const PORTAS = ['5050', '5051', '5052'];
 let dadosGlobais = [], pausado = false, _visible = true;
 
 // Caches para evitar reflow do DOM e renderizações desnecessárias
@@ -14,25 +14,22 @@ document.addEventListener('visibilitychange', () => {
 });
 
 async function checkHealth() {
+    let activeApi = null;
     for (let porta of PORTAS) {
         const url = `http://localhost:${porta}`;
         try {
             const r = await fetch(url + '/api/health', { signal: AbortSignal.timeout(1500) });
             if (r.ok) {
-                if (API !== url) {
-                    API = url;
-                    document.getElementById('api-status-dot').className = 'dot dot-green';
-                    document.getElementById('api-port-label').innerText = `Buffer: ${porta}`;
-                }
-                return;
+                document.getElementById(`dot-${porta}`).className = 'dot dot-green';
+                if (!activeApi) activeApi = url;
+            } else {
+                document.getElementById(`dot-${porta}`).className = 'dot dot-red';
             }
-        } catch(e) {}
+        } catch(e) {
+            document.getElementById(`dot-${porta}`).className = 'dot dot-red';
+        }
     }
-    if (API !== null) {
-        API = null;
-        document.getElementById('api-status-dot').className = 'dot dot-red';
-        document.getElementById('api-port-label').innerText = 'Offline';
-    }
+    // O Load Balancer (8080) é o principal. As pings acima servem só para a UI.
 }
 
 function mudarAba(aba) {

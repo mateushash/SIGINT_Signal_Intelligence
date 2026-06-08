@@ -27,6 +27,9 @@ for i in {1..20}; do
     sleep 1
 done
 
+echo -e "${BLUE}1.5. Iniciando Load Balancer (Nginx) no Docker...${NC}"
+docker start sigint_nginx_lb 2>/dev/null || docker run -d --name sigint_nginx_lb -p 8080:8080 -v "$(pwd)/nginx_lb.conf:/etc/nginx/nginx.conf:ro" nginx:alpine
+
 echo -e "${BLUE}2. Limpando processos antigos do Python...${NC}"
 pkill -f "src/buffer.py"
 pkill -f "src/worker_rabbit.py"
@@ -34,9 +37,10 @@ pkill -f "src/score_service.py"
 sleep 1
 
 echo -e "${BLUE}3. Iniciando serviços em segundo plano...${NC}"
-mkdir -p logs
-python3 -u src/buffer.py > logs/buffer.log 2>&1 &
-echo -e "   [OK] Buffer (Porta 5050)"
+python3 -u src/buffer.py 5050 > logs/buffer_5050.log 2>&1 &
+python3 -u src/buffer.py 5051 > logs/buffer_5051.log 2>&1 &
+python3 -u src/buffer.py 5052 > logs/buffer_5052.log 2>&1 &
+echo -e "   [OK] Buffers (Portas 5050, 5051 e 5052 - Failover Ativo)"
 python3 -u src/worker_rabbit.py > logs/worker.log 2>&1 &
 echo -e "   [OK] Worker (RabbitMQ Consumer)"
 python3 -u src/score_service.py > logs/score.log 2>&1 &

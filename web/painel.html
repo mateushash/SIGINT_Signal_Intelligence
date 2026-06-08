@@ -12,9 +12,18 @@
     <div class="hero">
         <h1>SIGINT</h1>
         <p>Signal Intelligence — Sistema de Decodificação de Sinais</p>
-        <div class="hero-badge" id="health-badge">
-            <span id="api-status-dot" class="dot"></span>
-            <span id="api-port-label">Conectando...</span>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <div class="hero-badge" id="health-badge">
+                <span id="api-status-dot" class="dot"></span>
+                <span id="api-port-label">Conectando...</span>
+            </div>
+            <div class="hero-badge" id="buffers-badge">
+                <span id="label-5050">B1(5050): </span><span id="dot-5050" class="dot dot-red"></span>
+                <span class="divider" style="margin: 0 8px; opacity: 0.5;">|</span>
+                <span id="label-5051">B2(5051): </span><span id="dot-5051" class="dot dot-red"></span>
+                <span class="divider" style="margin: 0 8px; opacity: 0.5;">|</span>
+                <span id="label-5052">B3(5052): </span><span id="dot-5052" class="dot dot-red"></span>
+            </div>
         </div>
     </div>
 
