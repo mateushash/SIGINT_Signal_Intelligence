@@ -25,7 +25,7 @@ chmod +x *.sh
 ```
 
 > [!IMPORTANT]
-> **Certifique-se de que o Docker Desktop está aberto no seu Mac!** Ele será usado apenas para o RabbitMQ.
+> **Certifique-se de que o Docker Desktop está aberto!** Ele será usado apenas para o RabbitMQ.
 
 ---
 

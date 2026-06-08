@@ -114,26 +114,26 @@ def processar_stream_binario(binario: str, message_id: str) -> str:
             i += 7
         # Separador de letra (3 zeros) — mas só se não é parte de 7 zeros
         elif remaining >= 3 and data[i:i + 3] == "000":
-            # Verifica se não é prefixo de separador de palavra
-            if remaining < 7 or data[i:i + 7] != "0000000":
-                resultado += "|"
-                i += 3
-            else:
-                # É prefixo de separador de palavra, mas precisamos de mais dados
+            # Se faltam caracteres para formar os 7 zeros e não há "1" no caminho, aguarda
+            if "1" not in data[i:i + 7] and remaining < 7:
                 break
+            resultado += "|"
+            i += 3
         # Traço morse (3 uns)
         elif remaining >= 3 and data[i:i + 3] == "111":
             resultado += "-"
             i += 3
         # Ponto morse (1 um)
         elif data[i] == "1":
+            # Se faltam caracteres e é uma sequência só de uns, pode ser prefixo de "111"
+            if "0" not in data[i:i + 3] and remaining < 3:
+                break
             resultado += "."
             i += 1
         # Zero avulso (separador intra-símbolo)
         elif data[i] == "0":
-            # Pode ser separador ou parte de um separador maior
-            # Se temos menos de 3 chars restantes, pode ser incompleto
-            if remaining < 3:
+            # Pode ser separador ou parte de um separador maior (3 zeros)
+            if "1" not in data[i:i + 3] and remaining < 3:
                 break  # Guarda no buffer para o próximo pacote
             i += 1
         else:
@@ -150,15 +150,27 @@ def morse_stream_para_texto(morse_stream: str, message_id: str) -> str:
     """
     Converte morse parcial em texto legível.
     '|' separa letras, ' ' separa palavras.
+    Processa todos os símbolos completos (seguidos de '|' ou ' ').
     """
     buf = _get_buffers(message_id)
     buf["morse"] += morse_stream
 
-    partes = buf["morse"].split("|")
+    texto = buf["morse"]
+    
+    last_pipe = texto.rfind("|")
+    last_space = texto.rfind(" ")
+    last_complete_idx = max(last_pipe, last_space)
+    
+    if last_complete_idx == -1:
+        return ""
+        
+    complete_part = texto[:last_complete_idx + 1]
+    buf["morse"] = texto[last_complete_idx + 1:]
+    
+    partes = complete_part.split("|")
     resultado = ""
 
-    # Processa todas as partes exceto a última (que pode estar incompleta)
-    for parte in partes[:-1]:
+    for parte in partes:
         if " " in parte:
             # Pode ter espaços (separadores de palavra)
             subpartes = parte.split(" ")
@@ -183,8 +195,6 @@ def morse_stream_para_texto(morse_stream: str, message_id: str) -> str:
             else:
                 resultado += "?"
 
-    # Guarda o fragmento incompleto
-    buf["morse"] = partes[-1]
     return resultado
 
 
