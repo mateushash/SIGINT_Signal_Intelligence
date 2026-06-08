@@ -16,7 +16,7 @@ docker start rabbitmq || docker run -d --name rabbitmq -p 5672:5672 -p 15672:156
 
 echo -e "${BLUE}⏳ Aguardando RabbitMQ estabilizar...${NC}"
 for i in {1..20}; do
-    if nc -z localhost 5672 > /dev/null 2>&1; then
+    if nc -z 127.0.0.1 5672 > /dev/null 2>&1; then
         echo -e "${GREEN}✅ RabbitMQ está online!${NC}"
         break
     fi
@@ -34,7 +34,6 @@ echo -e "${BLUE}2. Limpando processos antigos do Python...${NC}"
 pkill -f "src/buffer.py"
 pkill -f "src/worker_rabbit.py"
 pkill -f "src/score_service.py"
-sleep 1
 
 echo -e "${BLUE}3. Iniciando serviços em segundo plano...${NC}"
 python3 -u src/buffer.py 5050 > logs/buffer_5050.log 2>&1 &

@@ -303,3 +303,112 @@ async function rodarValidacao() {
 setInterval(() => { if(_visible){checkHealth();} }, 5000);
 setInterval(() => { if(_visible){fetchDados(); fetchHealth(); fetchStats();} }, 2500);
 checkHealth(); fetchDados(); fetchHealth(); fetchStats();
+
+const MORSE_DICT = {
+    'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..',
+    'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
+    'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+    'M': '--', 'N': '-.', 'O': '---', 'P': '.--.',
+    'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-',
+    'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+    'Y': '-.--', 'Z': '--..', 'Ç': '-.-.', 'ç': '-.-.'
+};
+
+function limparTexto(texto) {
+    let limpo = texto.toUpperCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    return limpo.replace(/[^A-Z ]/g, '');
+}
+
+function encodeMorseBinario(texto) {
+    const limpo = limparTexto(texto);
+    const palavras = limpo.split(/\s+/);
+    let morse = palavras.map(palavra => {
+        let letras = [];
+        for (let letra of palavra) {
+            if (MORSE_DICT[letra]) letras.push(MORSE_DICT[letra]);
+        }
+        return letras.join(' ');
+    }).join(' / ');
+
+    let binario = "";
+    const pM = morse.split(" / ");
+    for (let p of pM) {
+        const letras = p.split(" ");
+        for (let l of letras) {
+            for (let s of l) {
+                if (s === '.') binario += "1";
+                else if (s === '-') binario += "111";
+                binario += "0";
+            }
+            binario += "000";
+        }
+        binario += "0000000";
+    }
+    return binario;
+}
+
+function encodeCesar(texto, shift = 3) {
+    const limpo = limparTexto(texto);
+    let resultado = "";
+    for (let i = 0; i < limpo.length; i++) {
+        let charCode = limpo.charCodeAt(i);
+        if (charCode === 32) {
+            resultado += " ";
+        } else if (charCode >= 65 && charCode <= 90) {
+            let novoCodigo = charCode - 65 + shift;
+            resultado += String.fromCharCode((novoCodigo % 26) + 65);
+        }
+    }
+    return resultado;
+}
+
+async function enviarMensagemSimulador() {
+    const input = document.getElementById('sim-msg');
+    const select = document.getElementById('sim-cifra');
+    const btn = document.getElementById('btn-sim-enviar');
+    const msgBruta = input.value.trim();
+    
+    if (!msgBruta) {
+        alert("Por favor, digite uma mensagem.");
+        input.focus();
+        return;
+    }
+
+    const cifra = select.value;
+    let payload = "";
+    if (cifra === '&') {
+        payload = encodeMorseBinario(msgBruta);
+    } else if (cifra === '$') {
+        payload = encodeCesar(msgBruta);
+    }
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i data-lucide="loader" class="icon-sm"></i> Enviando...';
+    lucide.createIcons();
+    
+    try {
+        const r = await fetch(API + '/receber', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                mensagem: payload,
+                cifra: cifra
+            })
+        });
+        
+        if (r.ok) {
+            input.value = '';
+            fetchDados(); // Atualiza a tela na hora
+        } else {
+            alert("Erro ao enviar mensagem.");
+        }
+    } catch (e) {
+        alert("Erro de conexão! O Buffer está online?");
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="zap" class="icon-sm"></i> Enviar';
+        lucide.createIcons();
+    }
+}

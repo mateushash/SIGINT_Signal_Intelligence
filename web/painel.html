@@ -66,6 +66,22 @@
 
             <!-- ABA MONITOR -->
             <div class="tab-panel active" id="panel-monitor">
+                
+                <!-- SIMULADOR DE ENVIO -->
+                <div class="card" style="margin-bottom: 20px; padding: 15px; border: 1px solid var(--border);">
+                    <div class="panel-title" style="margin-bottom: 10px;"><i data-lucide="send" class="icon-sm"></i> Simulador de Envio</div>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <input type="text" id="sim-msg" class="input-busca" style="flex: 1; min-width: 200px;" placeholder="Digite a mensagem secreta...">
+                        <select id="sim-cifra" class="input-busca" style="width: auto;">
+                            <option value="&">Morse</option>
+                            <option value="$">Cifra de César</option>
+                        </select>
+                        <button class="btn btn-accent" id="btn-sim-enviar" onclick="enviarMensagemSimulador()">
+                            <i data-lucide="zap" class="icon-sm"></i> Enviar
+                        </button>
+                    </div>
+                </div>
+
                 <div class="toolbar">
                     <input type="text" class="input-busca" id="busca" placeholder="Pesquisar mensagens..." onkeyup="renderizar()">
                     <div class="btn-group">
