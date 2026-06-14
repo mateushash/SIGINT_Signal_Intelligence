@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGINT — Signal Intelligence Dashboard</title>
+    <meta name="description" content="Sistema de decodificação de sinais — Dashboard de monitoramento em tempo real">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+    <div class="hero">
+        <h1>SIGINT</h1>
+        <p>Signal Intelligence — Sistema de Decodificação de Sinais</p>
+        <div class="hero-badge" id="health-badge">
+            <span id="api-status-dot" class="dot"></span>
+            <span id="api-port-label">Conectando...</span>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="stats" id="stats-row">
+            <div class="stat-box">
+                <div class="stat-val" id="s-msgs">—</div>
+                <div class="stat-label">Mensagens</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val" id="s-pkts">—</div>
+                <div class="stat-label">Pacotes</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val" id="s-proc">—</div>
+                <div class="stat-label">Processados</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val" id="s-pend">—</div>
+                <div class="stat-label">Pendentes</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val" id="s-integ">—</div>
+                <div class="stat-label">Média Integridade</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val" id="s-lat">—</div>
+                <div class="stat-label">Média Latência</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="mudarAba('monitor')" id="tab-monitor"><i data-lucide="radio" class="icon-sm"></i> Monitor</button>
+                <button class="tab-btn" onclick="mudarAba('scores')" id="tab-scores"><i data-lucide="bar-chart-3" class="icon-sm"></i> Scores</button>
+                <button class="tab-btn" onclick="mudarAba('mensagens')" id="tab-mensagens"><i data-lucide="message-square" class="icon-sm"></i> Mensagens</button>
+                <button class="tab-btn" onclick="mudarAba('validar')" id="tab-validar"><i data-lucide="search" class="icon-sm"></i> Validar</button>
+                <button class="tab-btn" onclick="mudarAba('api')" id="tab-api"><i data-lucide="plug" class="icon-sm"></i> API Docs</button>
+            </div>
+
+            <!-- ABA MONITOR -->
+            <div class="tab-panel active" id="panel-monitor">
+                <div class="toolbar">
+                    <input type="text" class="input-busca" id="busca" placeholder="Pesquisar mensagens..." onkeyup="renderizar()">
+                    <div class="btn-group">
+                        <button class="btn" id="btn-pause" onclick="togglePause()"><i data-lucide="pause" class="icon-sm"></i> Pausar</button>
+                        <button class="btn" onclick="exportarTxt()"><i data-lucide="download" class="icon-sm"></i> Exportar .txt</button>
+                    </div>
+                </div>
+                <div class="split">
+                    <div>
+                        <div class="panel-title">Logs de Entrada</div>
+                        <div class="data-box" id="logs"></div>
+                    </div>
+                    <div>
+                        <div class="panel-title">Resultado Decodificado</div>
+                        <div class="data-box" id="resultados"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA SCORES -->
+            <div class="tab-panel" id="panel-scores">
+                <div class="toolbar">
+                    <span class="toolbar-info">Métricas calculadas pelo <strong>Score Service</strong> após cada transmissão completa.</span>
+                    <button class="btn btn-accent" onclick="fetchScores()"><i data-lucide="refresh-cw" class="icon-sm"></i> Atualizar</button>
+                </div>
+                <div class="scores-grid" id="scores-grid">
+                    <div class="vazio">Aguardando scores...</div>
+                </div>
+            </div>
+
+            <!-- ABA MENSAGENS -->
+            <div class="tab-panel" id="panel-mensagens">
+                <div class="toolbar">
+                    <span class="toolbar-info">Todas as mensagens decodificadas pelo sistema.</span>
+                    <div class="btn-group">
+                        <button class="btn btn-accent" onclick="fetchMensagens()"><i data-lucide="refresh-cw" class="icon-sm"></i> Atualizar</button>
+                        <button class="btn" onclick="exportarJson()"><i data-lucide="package" class="icon-sm"></i> Exportar JSON</button>
+                        <button class="btn btn-danger" onclick="limparBanco()"><i data-lucide="trash-2" class="icon-sm"></i> Limpar Banco</button>
+                    </div>
+                </div>
+                <div id="mensagens-list">
+                    <div class="vazio">Carregando...</div>
+                </div>
+            </div>
+
+            <!-- ABA VALIDAR -->
+            <div class="tab-panel" id="panel-validar">
+                <div class="validador-box">
+                    <label><i data-lucide="search" class="icon-sm"></i> Validar Mensagem pelo Dicionário Português</label>
+                    <div class="validador-row">
+                        <input type="text" class="input-id" id="input-msg-id"
+                            placeholder="Cole aqui o ID da mensagem (ex: a1b2c3d4-...)"
+                            onkeydown="if(event.key==='Enter') rodarValidacao()">
+                        <button class="btn-validar" id="btn-validar" onclick="rodarValidacao()">
+                            <i data-lucide="search" class="icon-sm" id="btn-validar-icon"></i> Validar
+                        </button>
+                    </div>
+                    <div class="validador-hint">
+                        <i data-lucide="lightbulb" class="icon-xs"></i> Copie o ID de uma mensagem na aba <strong>Mensagens</strong> e cole acima.
+                    </div>
+                </div>
+
+                <div class="val-resultado" id="val-resultado">
+                    <div class="val-texto-box">
+                        <div class="val-label">Texto Original (bruto)</div>
+                        <div class="val-texto-original" id="val-original"></div>
+                        <div class="val-label" style="margin-top:14px">Texto Reconstruído</div>
+                        <div class="val-texto-rec" id="val-reconstruido"></div>
+                    </div>
+                    <div class="val-label" style="margin-bottom:10px">Análise palavra a palavra:</div>
+                    <div class="val-chips" id="val-chips"></div>
+                    <div class="val-score-row">
+                        <div class="val-score-item">
+                            <div class="val-score-num" id="val-score">—</div>
+                            <div class="val-score-lbl">Score Validação</div>
+                        </div>
+                        <div class="val-score-item">
+                            <div class="val-score-num" id="val-total">—</div>
+                            <div class="val-score-lbl">Total Palavras</div>
+                        </div>
+                        <div class="val-score-item">
+                            <div class="val-score-num" id="val-tempo">—</div>
+                            <div class="val-score-lbl">Tempo API</div>
+                        </div>
+                    </div>
+                    <div class="val-api-info" id="val-api-info"></div>
+                </div>
+                <div class="vazio" id="val-vazio" style="margin-top:30px">Cole um ID acima e clique em Validar para começar.</div>
+            </div>
+
+            <!-- ABA API DOCS -->
+            <div class="tab-panel" id="panel-api">
+                <div class="toolbar"><span class="toolbar-info">Documentação dos endpoints REST disponíveis.</span></div>
+                <table class="endpoint-table">
+                    <thead>
+                        <tr><th>Método</th><th>Endpoint</th><th>Descrição</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><span class="method-tag method-post">POST</span></td><td><code>/receber</code></td><td>Envia mensagem codificada para o buffer</td></tr>
+                        <tr><td><span class="method-tag method-post">POST</span></td><td><code>/retorno</code></td><td>Worker devolve resultado decodificado</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/health</code></td><td>Health check + uptime + status do RabbitMQ</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/status</code></td><td>Últimos 50 pacotes (monitor em tempo real)</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/stats</code></td><td>Estatísticas agregadas do sistema</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/scores</code></td><td>Últimos 20 scores calculados</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/mensagens</code></td><td>Lista mensagens decodificadas (read-only)</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/mensagem/&lt;id&gt;</code></td><td>Detalhe completo de uma mensagem</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/central</code></td><td>Central lê mensagens (altera status)</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/exportar</code></td><td>Exporta tudo em JSON</td></tr>
+                        <tr><td><span class="method-tag method-post">POST</span></td><td><code>/api/limpar</code></td><td>Limpa o banco de dados inteiro</td></tr>
+                        <tr><td><span class="method-tag method-get">GET</span></td><td><code>/api/validar/&lt;id&gt;</code></td><td>Valida texto via dicionário PT</td></tr>
+                        <tr><td><span class="method-tag method-delete">DELETE</span></td><td><code>/api/mensagem/deletar/&lt;id&gt;</code></td><td>Remove uma mensagem específica</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

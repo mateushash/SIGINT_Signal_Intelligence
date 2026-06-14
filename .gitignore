@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+venv/
+
+# Logs e DB
+*.log
+*.db
+*.db-shm    # SQLite WAL shared memory
+*.db-wal    # SQLite WAL write-ahead log
+
+# Node
+node_modules/
+
+# Sistema (Mac)
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Temporários
+*.tmp
+*.swp
